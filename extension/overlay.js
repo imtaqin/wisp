@@ -83,19 +83,30 @@ const wispOverlay = (() => {
       50% { transform: translateY(-5px) }
     }
 
-    .wisp-spark { animation: drift 3.1s ease-in-out infinite; transform-origin: center }
-    .wisp-spark.b { animation-duration: 2.3s; animation-delay: -.8s }
-    .layer.busy .wisp-spark { animation-duration: 1.2s }
-    @keyframes drift {
-      0%, 100% { opacity: .25; transform: translate(0, 0) }
-      50% { opacity: .9; transform: translate(-2px, -5px) }
+    /* sparkles twinkle out of phase */
+    .spk { transform-origin: center; transform-box: fill-box; animation: twinkle 2.6s ease-in-out infinite }
+    .spk.b { animation-duration: 3.3s; animation-delay: -1.1s }
+    .spk.c { animation-duration: 2.1s; animation-delay: -.6s }
+    .layer.busy .spk { animation-duration: 1.1s }
+    @keyframes twinkle {
+      0%, 100% { opacity: .2; transform: scale(.6) rotate(0deg) }
+      50% { opacity: 1; transform: scale(1.15) rotate(25deg) }
     }
 
-    .tail path { animation: wave 2.8s ease-in-out infinite }
-    .layer.busy .tail path { animation-duration: 1.3s }
-    @keyframes wave {
-      0%, 100% { d: path("M8 46q5 7 10.5 0t10.5 0 10.5 0 10.5 0V34H8Z") }
-      50% { d: path("M8 46q5 0 10.5 0t10.5 7 10.5 0 10.5 7V34H8Z") }
+    /* the hem ripples like cloth */
+    .hull { animation: hem 3s ease-in-out infinite }
+    .layer.busy .hull { animation-duration: 1.4s }
+    @keyframes hem {
+      0%, 100% { d: path("M29 5c11.6 0 20 8.6 20 20.5V46q-6.7 8-13.3 0q-6.7 8-13.3 0q-6.7 8-13.4 0V25.5C9 13.6 17.4 5 29 5Z") }
+      50% { d: path("M29 5c11.6 0 20 8.6 20 20.5V50q-6.7 5-13.3 0q-6.7 8-13.3 0q-6.7 5-13.4 0V25.5C9 13.6 17.4 5 29 5Z") }
+    }
+
+    /* the shadow breathes with the float */
+    .shadow { transform-origin: center; transform-box: fill-box; animation: shade 3.4s ease-in-out infinite }
+    .layer.busy .shadow { animation-duration: 1.5s }
+    @keyframes shade {
+      0%, 100% { opacity: .9; transform: scaleX(1) }
+      50% { opacity: .5; transform: scaleX(.82) }
     }
 
     .eyes { transition: transform .25s cubic-bezier(.2, .9, .3, 1) }
@@ -103,20 +114,19 @@ const wispOverlay = (() => {
     .blinking .lid { animation: blink .18s ease-in-out; }
     @keyframes blink { 0%, 100% { transform: scaleY(0) } 50% { transform: scaleY(1) } }
 
+    /* happy swaps the eyes for two arcs; oops squints them */
+    .eyes-open, .eyes-happy { transition: opacity .18s ease, transform .18s ease }
+    .eyes-happy { opacity: 0 }
+    .mood-happy .eyes-happy { opacity: 1 }
+    .mood-happy .eyes-open { opacity: 0 }
+    .mood-oops .eyes-open { transform: translateY(1.5px) scaleY(.8); transform-origin: center; transform-box: fill-box }
+
     .mouth { transition: d .2s ease, opacity .2s ease }
     .mouth-idle, .mouth-busy, .mouth-happy, .mouth-oops { opacity: 0 }
     .mood-idle .mouth-idle,
     .mood-busy .mouth-busy,
     .mood-happy .mouth-happy,
     .mood-oops .mouth-oops { opacity: 1 }
-
-    .spark { opacity: 0 }
-    .mood-happy .spark { animation: spark .9s ease-out }
-    @keyframes spark {
-      0% { opacity: 0; transform: scale(.4) }
-      35% { opacity: 1; transform: scale(1) }
-      100% { opacity: 0; transform: scale(1.3) }
-    }
 
     /* --- cursor ------------------------------------------------------ */
     .cursor {
@@ -168,7 +178,7 @@ const wispOverlay = (() => {
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .frame, .mascot, .wisp-spark, .tail path, .lid, .spark, .log-row { animation: none }
+      .frame, .mascot, .spk, .hull, .shadow, .lid, .log-row { animation: none }
       .mascot-wrap { transition: none }
       .ripple { animation-duration: 1ms }
     }
@@ -176,58 +186,67 @@ const wispOverlay = (() => {
 
   // Kap: the Wisp mascot. A small floating bot whose eyes follow the
   // virtual cursor and whose mouth carries the mood.
-  // Wisp: a small drifting flame-ghost. Its eyes follow the virtual cursor and
-  // its mouth carries the mood.
+  // Wisp: a round little ghost. Its hem ripples, it blinks, its sparkles
+  // twinkle, its eyes follow the virtual cursor and its face carries the mood.
   const MASCOT_SVG = `
     <svg class="mascot" viewBox="0 0 58 66" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <linearGradient id="wisp-body" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#fde68a"/>
-          <stop offset=".55" stop-color="#fbbf24"/>
+        <linearGradient id="wisp-body" x1=".2" y1="0" x2=".8" y2="1">
+          <stop offset="0" stop-color="#fef3c7"/>
+          <stop offset=".45" stop-color="#fcd34d"/>
           <stop offset="1" stop-color="#f59e0b"/>
         </linearGradient>
-        <radialGradient id="wisp-halo" cx=".5" cy=".45" r=".55">
-          <stop offset="0" stop-color="#fcd34d" stop-opacity=".55"/>
+        <radialGradient id="wisp-halo" cx=".5" cy=".45" r=".5">
+          <stop offset="0" stop-color="#fcd34d" stop-opacity=".5"/>
           <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
         </radialGradient>
         <filter id="wisp-glow" x="-70%" y="-70%" width="240%" height="240%">
-          <feGaussianBlur stdDeviation="2.6" result="b"/>
+          <feGaussianBlur stdDeviation="2.2" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
 
-      <ellipse cx="29" cy="62" rx="13" ry="3" fill="rgba(245, 158, 11, .28)"/>
+      <ellipse class="shadow" cx="29" cy="59" rx="11" ry="2.4" fill="rgba(245, 158, 11, .3)"/>
       <circle cx="29" cy="30" r="27" fill="url(#wisp-halo)"/>
 
-      <g filter="url(#wisp-glow)">
-        <circle class="wisp-spark" cx="47" cy="20" r="2.6" fill="#fde68a"/>
-        <circle class="wisp-spark b" cx="11" cy="27" r="1.8" fill="#fcd34d"/>
+      <g class="sparks" filter="url(#wisp-glow)" fill="#fef3c7">
+        <path class="spk a" d="M50 15l1.1 2.9L54 19l-2.9 1.1L50 23l-1.1-2.9L46 19l2.9-1.1Z"/>
+        <path class="spk b" d="M7.5 25l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3L4.3 28l2.3-.9Z"/>
+        <path class="spk c" d="M47.5 43l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8Z"/>
       </g>
 
-      <g class="tail">
-        <path d="M8 46q5 7 10.5 0t10.5 0 10.5 0 10.5 0V34H8Z" fill="url(#wisp-body)"/>
+      <g class="body">
+        <path class="hull" d="M29 5c11.6 0 20 8.6 20 20.5V46q-6.7 8-13.3 0q-6.7 8-13.3 0q-6.7 8-13.4 0V25.5C9 13.6 17.4 5 29 5Z" fill="url(#wisp-body)"/>
+        <path d="M29 5c11.6 0 20 8.6 20 20.5v3c-2.4-9.6-10-16-20-16s-17.6 6.4-20 16v-3C9 13.6 17.4 5 29 5Z" fill="#fffbeb" fill-opacity=".5"/>
       </g>
-      <path d="M29 6c11.6 0 21 9 21 20.5V40H8V26.5C8 15 17.4 6 29 6Z" fill="url(#wisp-body)"/>
-      <path d="M29 6c11.6 0 21 9 21 20.5V30c-3-9-11-15-21-15s-18 6-21 15v-3.5C8 15 17.4 6 29 6Z" fill="rgba(255, 251, 235, .45)"/>
+
+      <g class="blush" fill="#fb7185" fill-opacity=".45">
+        <ellipse cx="16.5" cy="33" rx="3.6" ry="2.3"/>
+        <ellipse cx="41.5" cy="33" rx="3.6" ry="2.3"/>
+      </g>
 
       <g class="eyes">
-        <ellipse cx="21" cy="27" rx="4" ry="5" fill="#1c1409"/>
-        <ellipse cx="37" cy="27" rx="4" ry="5" fill="#1c1409"/>
-        <circle cx="22.6" cy="25" r="1.3" fill="#fffbeb"/>
-        <circle cx="38.6" cy="25" r="1.3" fill="#fffbeb"/>
-        <rect class="lid" x="16" y="21" width="10" height="12" rx="3" fill="#fbbf24"/>
-        <rect class="lid" x="32" y="21" width="10" height="12" rx="3" fill="#fbbf24"/>
+        <g class="eyes-open">
+          <ellipse cx="22" cy="26" rx="4.6" ry="5.6" fill="#231709"/>
+          <ellipse cx="36" cy="26" rx="4.6" ry="5.6" fill="#231709"/>
+          <circle cx="23.7" cy="23.6" r="1.6" fill="#fffbeb"/>
+          <circle cx="37.7" cy="23.6" r="1.6" fill="#fffbeb"/>
+          <circle cx="20.6" cy="28.4" r=".9" fill="#fffbeb" fill-opacity=".7"/>
+          <circle cx="34.6" cy="28.4" r=".9" fill="#fffbeb" fill-opacity=".7"/>
+          <rect class="lid" x="16.5" y="19" width="11" height="14" rx="4" fill="#fcd34d"/>
+          <rect class="lid" x="30.5" y="19" width="11" height="14" rx="4" fill="#fcd34d"/>
+        </g>
+        <g class="eyes-happy" stroke="#231709" stroke-width="2.6" stroke-linecap="round" fill="none">
+          <path d="M18.4 27.4q3.6-5 7.2 0"/>
+          <path d="M32.4 27.4q3.6-5 7.2 0"/>
+        </g>
       </g>
 
-      <g class="mouth" stroke="#1c1409" stroke-width="2" stroke-linecap="round" fill="none">
-        <path class="mouth-idle" d="M25 36h8"/>
-        <path class="mouth-busy" d="M24 35q5 4 10 0"/>
-        <path class="mouth-happy" d="M23 34q6 7 12 0"/>
-        <path class="mouth-oops" d="M24 37q5-4 10 0"/>
-      </g>
-
-      <g class="spark" fill="#fffbeb">
-        <path d="M48 10l1.4 3.4L53 15l-3.6 1.6L48 20l-1.4-3.4L43 15l3.6-1.6Z"/>
+      <g class="mouth" fill="#231709">
+        <path class="mouth-idle" d="M26 35.5q3 2.6 6 0q-3 4.4-6 0Z"/>
+        <path class="mouth-busy" d="M25.2 35q3.8 6.4 7.6 0Z"/>
+        <path class="mouth-happy" d="M24.4 34.6q4.6 7.6 9.2 0Z"/>
+        <path class="mouth-oops" d="M25 38.4q4-5 8 0q-4-2.4-8 0Z"/>
       </g>
     </svg>`;
 
