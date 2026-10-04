@@ -349,6 +349,102 @@ tools:
         type: number
         description: Y coordinate relative to the viewport
 
+  wait_for:
+    description: >-
+      Wait until an element (selector or xpath) or a piece of visible text
+      reaches a state, instead of sleeping and hoping. States: visible (default),
+      hidden, attached, detached. Returns how long it waited, or WAIT_TIMEOUT.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      text:
+        type: string
+        description: Visible text to wait for, as an alternative to selector/xpath
+      state:
+        type: string
+        enum: [visible, hidden, attached, detached]
+        description: Condition to wait for
+        default: visible
+      timeout:
+        type: number
+        description: Give up after this many milliseconds
+        default: 10000
+
+  wait_idle:
+    description: >-
+      Wait until the tab has had no network request in flight for a quiet
+      period - the reliable way to let a page settle after navigate or click.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      quietMs:
+        type: number
+        description: How long the network must stay quiet to count as idle
+        default: 500
+      timeout:
+        type: number
+        description: Give up after this many milliseconds
+        default: 15000
+
+  find_text:
+    description: >-
+      Find visible text on the page. Returns the innermost element holding each
+      match with its unique selector and bounds, so matches can be clicked or
+      filled directly.
+    required: [tabId, text]
+    properties:
+      tabId: *tabId
+      text:
+        type: string
+        description: Text to search for
+      limit:
+        type: number
+        description: Maximum matches to return
+        default: 10
+      caseSensitive:
+        type: boolean
+        description: Match case exactly
+        default: false
+      visibleOnly:
+        type: boolean
+        description: Skip matches that are not rendered
+        default: true
+
+  get_text:
+    description: >-
+      The page (or one element) as readable text rather than markup. Far
+      cheaper than dom for reading an article, a result list or an error panel.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      maxChars:
+        type: number
+        description: Truncate the text at this length
+        default: 20000
+      includeLinks:
+        type: boolean
+        description: Also return the links found inside the root
+        default: false
+
+  a11y_snapshot:
+    description: >-
+      The accessibility tree of the tab - roles, names and values as assistive
+      tech sees them. A compact, stable alternative to reading the DOM when
+      deciding what to interact with.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      maxNodes:
+        type: number
+        description: Stop after this many nodes
+        default: 400
+      interestingOnly:
+        type: boolean
+        description: Drop presentational and unnamed nodes
+        default: true
+
   console_logs:
     description: >-
       Get the browser tab's console contents - what you would see in the

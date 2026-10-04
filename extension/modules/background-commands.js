@@ -7,6 +7,7 @@ import { networkMonitor, networkRequests, networkBody } from './background-netwo
 import { evaluate } from './background-evaluate.js';
 import { type, insertText, clear } from './background-text.js';
 import { dialog } from './background-dialog.js';
+import { waitIdle, a11ySnapshot } from './background-inspect.js';
 
 export const getFromContentScript = async (tabId, command, params, ) => {
   return await chrome.tabs.sendMessage(tabId, { command, params });
@@ -166,5 +167,7 @@ export const backgroundCommands = {
   type,
   insertText,
   clear,
-  dialog
+  dialog,
+  wait_idle: waitIdle,
+  a11y_snapshot: a11ySnapshot
 }

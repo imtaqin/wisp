@@ -583,6 +583,128 @@ const helpers = {
 
     return respondWith({ blurred: true }, selector, xpath);
   },
+  // Wait until a target reaches `state`, or time out. Driven by a
+  // MutationObserver with a poll fallback, so it also catches changes that
+  // mutate nothing observable (a style recalc, an async layout).
+  wait_for: ({ selector, xpath, text, state = 'visible', timeout = 10000 }) => {
+    if (!selector && !xpath && !text) {
+      return respondWithError('TARGET_REQUIRED', 'Provide selector, xpath or text to wait for', selector, xpath);
+    }
+
+    const find = () => {
+      if (text) {
+        const needle = String(text).toLowerCase();
+        const hit = [...document.querySelectorAll('body *')].find((el) => {
+          if (el.children.length) return false; // leaf nodes carry the text
+          return (el.textContent || '').toLowerCase().includes(needle);
+        });
+        return hit || null;
+      }
+      try {
+        return findAllElements(selector, xpath)[0] || null;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    const satisfied = () => {
+      const element = find();
+      if (state === 'detached') return !element;
+      if (!element) return false;
+      if (state === 'attached') return true;
+      const visible = isElementVisible(element);
+      return state === 'hidden' ? !visible : visible;
+    };
+
+    const started = Date.now();
+    return new Promise((resolve) => {
+      const done = (ok) => {
+        observer.disconnect();
+        clearInterval(poll);
+        clearTimeout(cap);
+        const waitedMs = Date.now() - started;
+        if (!ok) {
+          resolve(respondWithError('WAIT_TIMEOUT',
+            `Timed out after ${timeout}ms waiting for ${text ? `text "${text}"` : (selector || xpath)} to be ${state}`,
+            selector, xpath));
+          return;
+        }
+        const element = find();
+        resolve(respondWith({
+          state,
+          waitedMs,
+          element: element && state !== 'detached' ? getElementData(element) : undefined
+        }, selector, xpath));
+      };
+
+      const check = () => { if (satisfied()) done(true); };
+      const observer = new MutationObserver(check);
+      observer.observe(document.documentElement, {
+        childList: true, subtree: true, attributes: true, characterData: true
+      });
+      const poll = setInterval(check, 100);
+      const cap = setTimeout(() => done(satisfied()), Math.max(0, timeout));
+      check();
+    });
+  },
+
+  // Find visible text on the page. Returns the innermost element holding each
+  // match, so the selector is directly usable with click/fill.
+  find_text: ({ text, limit = 10, caseSensitive = false, visibleOnly = true }) => {
+    if (!text) return respondWithError('TEXT_REQUIRED', 'A text parameter is required');
+
+    const needle = caseSensitive ? String(text) : String(text).toLowerCase();
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const seen = new Set();
+    const matches = [];
+
+    while (walker.nextNode() && matches.length < limit) {
+      const node = walker.currentNode;
+      const content = node.textContent || '';
+      const haystack = caseSensitive ? content : content.toLowerCase();
+      if (!haystack.includes(needle)) continue;
+
+      const element = node.parentElement;
+      if (!element || seen.has(element)) continue;
+      if (element.closest('script, style, noscript')) continue;
+      seen.add(element);
+
+      const data = getElementData(element);
+      if (visibleOnly && !data.visible) continue;
+      matches.push({ ...data, text: content.trim().slice(0, 200) });
+    }
+
+    return respondWith({ query: text, matchCount: matches.length, matches });
+  },
+
+  // The page as readable text, for when the DOM is more than the caller needs.
+  get_text: ({ selector, xpath, maxChars = 20000, includeLinks = false }) => {
+    let root = document.body;
+    if (selector || xpath) {
+      root = findAllElements(selector, xpath)[0];
+      if (!root) return elementNotFound(selector, xpath);
+    } else {
+      root = document.querySelector('main, article, [role="main"]') || document.body;
+    }
+
+    const text = (root.innerText || '').replace(/\n{3,}/g, '\n\n').trim();
+    const result = {
+      text: text.slice(0, maxChars),
+      charCount: text.length,
+      truncated: text.length > maxChars,
+      root: getUniqueSelector(root)
+    };
+
+    if (includeLinks) {
+      result.links = [...root.querySelectorAll('a[href]')].slice(0, 200).map((a) => ({
+        text: (a.innerText || '').trim().slice(0, 120),
+        href: a.href
+      }));
+    }
+
+    return respondWith(result, selector, xpath);
+  },
+
   _cursor: ({show}) => {
     try {
       const position = wispOverlay.showCursor(show !== false);
