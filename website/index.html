@@ -1,426 +1,224 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="indigo" data-font="grotesk">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wisp — Browser automation for AI</title>
-<meta name="description" content="Control your browser with AI using Chrome DevTools and the Model Context Protocol. 100% open source, no analytics, no trackers.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wisp — let your AI drive your real browser</title>
+<meta name="description" content="Wisp is an MCP server and Chrome extension that lets AI assistants drive the browser you already use — your tabs, your logins — and shows you every action as it happens.">
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 <link rel="alternate icon" type="image/png" href="assets/images/icon48.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- themed gradient for the logo glyph -->
-<svg width="0" height="0" aria-hidden="true" style="position:absolute">
-  <defs>
-    <linearGradient id="kapGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop class="s0" offset="0"></stop>
-      <stop class="s1" offset="1"></stop>
-    </linearGradient>
-  </defs>
-</svg>
-
-<!-- ============================= NAV ============================= -->
-<header class="nav" id="nav">
-  <div class="wrap nav-inner">
-    <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span> Wisp</a>
-    <nav class="nav-links">
-      <a href="#action">In Action</a>
-      <a href="#tools">Tools</a>
-      <a href="#why">Why Wisp</a>
-      <a href="#how">How it Works</a>
-      <a href="https://imtaqin.github.io/wisp/MCP_USAGE.html">Docs</a>
-    </nav>
-    <div class="nav-cta">
-      <a class="btn btn-ghost btn-sm" href="https://github.com/imtaqin/wisp"><i data-lucide="github"></i> GitHub</a>
-      <a class="btn btn-primary btn-sm" href="https://to.kap.co/wisp-extension">Install</a>
-    </div>
-  </div>
+<header class="nav">
+  <a class="logo" href="./"><img src="assets/logo.svg" alt="">Wisp</a>
+  <nav class="links">
+    <a href="#how">How it works</a>
+    <a href="#tools">Tools</a>
+    <a href="#install">Install</a>
+    <a href="#safety">Safety</a>
+    <a href="https://github.com/imtaqin/wisp">GitHub</a>
+  </nav>
 </header>
 
-<main id="top">
-
-<!-- ============================= HERO ============================= -->
-<section class="hero" data-screen-label="Hero">
+<section class="hero">
   <div class="wrap">
-    <a class="badge reveal" href="https://imtaqin.github.io/wisp/MULTI_ASSISTANT_GUIDE.html">
-      <span class="tag">NEW</span>
-      Run multiple AI assistants at once
-      <span class="arrow">→</span>
-    </a>
-    <h1 class="reveal" data-d="1">Let your AI <span class="grad">drive the browser.</span></h1>
-    <p class="sub reveal" data-d="2">Wisp is an open-source MCP server and Chrome DevTools extension that gives any AI assistant real, reliable control of your browser. No Selenium, no chromedrivers, no headless guesswork — just the tab you're already looking at.</p>
-    <div class="hero-cta reveal" data-d="3">
-      <a class="btn btn-primary" href="https://to.kap.co/wisp-extension"><i data-lucide="download"></i> Install Extension</a>
-      <a class="btn btn-ghost" href="https://github.com/imtaqin/wisp"><i data-lucide="github"></i> View on GitHub</a>
-    </div>
-    <div class="trust reveal" data-d="4">
-      <span><i data-lucide="git-branch"></i> 100% Open Source</span>
-      <span><i data-lucide="eye-off"></i> No Analytics</span>
-      <span><i data-lucide="shield-check"></i> No Trackers</span>
+    <span class="eyebrow">MCP server · Chrome extension</span>
+    <h1>Let your AI drive <span>your real browser.</span></h1>
+    <p class="lede">Wisp connects any MCP client — Claude Code, Claude Desktop, Hermes, Cline — to the Chrome you already have open. Your tabs, your logins, your session. No headless driver, no second browser, no copy-pasting cookies.</p>
+
+    <div class="cta">
+      <a class="btn btn-primary" href="#install">Install in 3 steps</a>
+      <a class="btn btn-ghost" href="https://github.com/imtaqin/wisp">View source</a>
     </div>
 
-    <div class="shot reveal" data-d="5">
-      <div class="browser">
-        <div class="browser-bar">
-          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span class="url">chrome://devtools · Wisp panel</span>
-          <span class="pill"><span class="live"></span> WebSocket connected</span>
-        </div>
-        <img src="assets/images/ScreenshotWithExtensionPanel.webp" alt="Wisp DevTools panel showing command history, WebSocket status, and a screenshot preview alongside an AI chat automating a form.">
+    <div class="meta">
+      <span>MIT licensed</span>
+      <span>Runs on your machine</span>
+      <span>30 tools</span>
+      <span>No account, no telemetry</span>
+    </div>
+
+    <div class="shot">
+      <div class="shot-bar">
+        <i></i><i></i><i></i>
+        <span class="url">northwind.dev/contact</span>
+        <span class="live"><b></b> driven by Wisp</span>
+      </div>
+      <img src="assets/images/overlay-in-action.png" alt="A contact form in Chrome with an amber frame around the page, a small ghost mascot saying Wisp is clicking, a virtual cursor over the send button, and a log of the last five actions in the corner.">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Why it is different</span>
+    <h2>The browser stays yours.</h2>
+    <p class="lede" style="margin-top:14px">Most automation spins up a clean, logged-out browser and then fights to look human. Wisp skips that: it drives the tab already in front of you.</p>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="ic">◉</div>
+        <h3>Already signed in</h3>
+        <p>Your cookies, extensions, profile and 2FA state are simply there. Nothing to replicate, nothing to leak into a script.</p>
+      </div>
+      <div class="card">
+        <div class="ic">◎</div>
+        <h3>You watch it work</h3>
+        <p>An amber frame marks a driven tab. A cursor glides to each target, a ripple marks the click, and a log lists the last actions with timestamps.</p>
+      </div>
+      <div class="card">
+        <div class="ic">⌁</div>
+        <h3>DevTools-grade control</h3>
+        <p>Input, navigation and capture go through the Chrome DevTools Protocol, so clicks land where a real click would — iframes included.</p>
+      </div>
+      <div class="card">
+        <div class="ic">⊞</div>
+        <h3>Many tabs, many clients</h3>
+        <p>Each connected tab registers itself. Several assistants can share one server and target tabs by id, at the same time.</p>
+      </div>
+      <div class="card">
+        <div class="ic">▤</div>
+        <h3>Reads what you read</h3>
+        <p>DOM, element boxes, console buffer, network requests and bodies, screenshots of a region or the whole page.</p>
+      </div>
+      <div class="card">
+        <div class="ic">⎋</div>
+        <h3>Off by a switch</h3>
+        <p>A tab is connected only while you say so. Script execution is a separate grant that resets whenever the tab disconnects.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================= IN ACTION ============================= -->
-<section class="divider" id="action" data-screen-label="In Action">
+<section id="how">
   <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">See it in action</span>
-      <h2>A DevTools panel that shows its work.</h2>
-      <p>Every command and response is visible, timed, and inspectable — so you (and your AI) always know exactly what's happening.</p>
-    </div>
-    <div class="feat-grid">
-      <div class="feat reveal" data-d="1">
-        <div class="ic"><i data-lucide="history"></i></div>
-        <h3>Real-time command history</h3>
-        <p>See every command sent and response received, with detailed timing for each round trip.</p>
-      </div>
-      <div class="feat reveal" data-d="2">
-        <div class="ic"><i data-lucide="plug-zap"></i></div>
-        <h3>WebSocket connection status</h3>
-        <p>Monitor connection health and tab registration at a glance — no silent disconnects.</p>
-      </div>
-      <div class="feat reveal" data-d="3">
-        <div class="ic"><i data-lucide="image"></i></div>
-        <h3>Visual response preview</h3>
-        <p>Screenshots render as clickable images, with the full JSON payload right beside them.</p>
-      </div>
-      <div class="feat reveal" data-d="4">
-        <div class="ic"><i data-lucide="globe"></i></div>
-        <h3>Browser detection</h3>
-        <p>Automatically detects Chrome, Edge, Brave, Opera, and Vivaldi installs on your machine.</p>
-      </div>
-      <div class="feat reveal" data-d="5">
-        <div class="ic"><i data-lucide="crosshair"></i></div>
-        <h3>XPath &amp; CSS selectors</h3>
-        <p>Every element tool accepts both CSS selectors and XPath expressions interchangeably.</p>
-      </div>
-      <div class="feat reveal" data-d="6">
-        <div class="ic"><i data-lucide="app-window"></i></div>
-        <h3>Browser selection</h3>
-        <p>Open new tabs in a specific browser, or just fall back to the system default.</p>
-      </div>
+    <span class="eyebrow">How it works</span>
+    <h2>Three hops, all on your machine.</h2>
+    <div class="arch">
+      <img src="assets/architecture.svg" alt="Architecture: an AI client speaks MCP over stdio or WebSocket to the Wisp server on localhost port 61822, which speaks WebSocket to the Chrome extension, which drives your tab over the Chrome DevTools Protocol.">
     </div>
   </div>
 </section>
 
-<!-- ============================= TOOLS ============================= -->
-<section class="divider why" id="tools" data-screen-label="Tools">
+<section id="tools">
   <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">MCP interface</span>
-      <h2>Everything your AI can reach.</h2>
-      <p>Complete browser automation through the Model Context Protocol — tools, resources, and plain HTTP endpoints for debugging.</p>
-    </div>
+    <span class="eyebrow">Tools</span>
+    <h2>Thirty tools your assistant can call.</h2>
+    <p class="lede" style="margin-top:14px">Declared in <code>tools.yaml</code> and exposed over MCP. Targeting is by CSS selector, XPath or viewport coordinates.</p>
 
-    <div class="tools-tabs reveal">
-      <button class="tab active" data-tab="tools">Tools <span class="count">32</span></button>
-      <button class="tab" data-tab="resources">Resources <span class="count">7</span></button>
-      <button class="tab" data-tab="http">HTTP Endpoints <span class="count">32</span></button>
-    </div>
-
-    <!-- TOOLS -->
-    <div class="tabpanel active" id="panel-tools">
-      <div class="tool-filter reveal">
-        <i data-lucide="search"></i>
-        <input type="text" id="toolSearch" placeholder="Filter tools — try “click”, “screenshot”, “scroll”…">
-      </div>
-      <div class="group-grid" style="margin-top:24px">
-
-        <div class="tgroup reveal" data-d="1">
-          <div class="tgroup-head">
-            <span class="ic"><i data-lucide="compass"></i></span>
-            <h3>Navigation &amp; Tabs</h3>
-            <span class="gc">9</span>
-          </div>
-          <div class="tool"><span class="name">navigate</span><span class="desc">Navigate to any URL with timeout support</span></div>
-          <div class="tool"><span class="name">back</span><span class="desc">Go back in browser history</span></div>
-          <div class="tool"><span class="name">forward</span><span class="desc">Go forward in browser history</span></div>
-          <div class="tool"><span class="name">reload</span><span class="desc">Reload the current page</span></div>
-          <div class="tool"><span class="name">show</span><span class="desc">Bring a tab to the front and focus it</span></div>
-          <div class="tool"><span class="name">list_tabs</span><span class="desc">List all connected browser tabs</span></div>
-          <div class="tool"><span class="name">tab_detail</span><span class="desc">Get detailed information about a tab</span></div>
-          <div class="tool"><span class="name">new_tab</span><span class="desc">Open a new tab with browser selection</span></div>
-          <div class="tool"><span class="name">close</span><span class="desc">Close a browser tab</span></div>
-        </div>
-
-        <div class="tgroup reveal" data-d="2">
-          <div class="tgroup-head">
-            <span class="ic"><i data-lucide="mouse-pointer-click"></i></span>
-            <h3>Interaction</h3>
-            <span class="gc">14</span>
-          </div>
-          <div class="tool"><span class="name">click</span><span class="desc">Click elements by selector, XPath, or viewport coordinate</span></div>
-          <div class="tool"><span class="name">hover</span><span class="desc">Hover over elements to trigger effects</span></div>
-          <div class="tool"><span class="name">dialog</span><span class="desc">Answer a JavaScript alert/confirm/prompt blocking the page</span></div>
-          <div class="tool"><span class="name">fill</span><span class="desc">Fill form inputs by setting value directly</span></div>
-          <div class="tool"><span class="name">type</span><span class="desc">Type a string as real keystrokes</span></div>
-          <div class="tool"><span class="name">insertText</span><span class="desc">Insert a block of text at once (editors, Google Docs)</span></div>
-          <div class="tool"><span class="name">clear</span><span class="desc">Clear a text field with real key events</span></div>
-          <div class="tool"><span class="name">select</span><span class="desc">Select options from HTML dropdowns</span></div>
-          <div class="tool"><span class="name">keypress</span><span class="desc">Send keyboard events with modifier support</span></div>
-          <div class="tool"><span class="name">focus</span><span class="desc">Set focus on form elements</span></div>
-          <div class="tool"><span class="name">blur</span><span class="desc">Remove focus from elements</span></div>
-          <div class="tool"><span class="name">scroll</span><span class="desc">Scroll an element into view or to a coordinate</span></div>
-          <div class="tool"><span class="name">evaluate</span><span class="desc">Execute JavaScript in the page (toggle-gated)</span></div>
-          <div class="tool"><span class="name">compose</span><span class="desc">Run a sequence of commands in one call, stopping at the first failure — <a href="compose.html" style="color:var(--accent-ink);text-decoration:underline">guide</a></span></div>
-        </div>
-
-        <div class="tgroup reveal" data-d="3">
-          <div class="tgroup-head">
-            <span class="ic"><i data-lucide="scan-search"></i></span>
-            <h3>Information</h3>
-            <span class="gc">6</span>
-          </div>
-          <div class="tool"><span class="name">screenshot</span><span class="desc">Capture page or element screenshots</span></div>
-          <div class="tool"><span class="name">dom</span><span class="desc">Get HTML content of page or elements</span></div>
-          <div class="tool"><span class="name">elements</span><span class="desc">Query elements with visibility filtering</span></div>
-          <div class="tool"><span class="name">console_logs</span><span class="desc">Get console messages, exceptions, and entries</span></div>
-          <div class="tool"><span class="name">watch_console</span><span class="desc">Watch the console in real time for a duration</span></div>
-          <div class="tool"><span class="name">elementsFromPoint</span><span class="desc">Get elements at specific coordinates</span></div>
-        </div>
-
-        <div class="tgroup reveal" data-d="4">
-          <div class="tgroup-head">
-            <span class="ic"><i data-lucide="network"></i></span>
-            <h3>Network</h3>
-            <span class="gc">3</span>
-          </div>
-          <div class="tool"><span class="name">network_monitor</span><span class="desc">Turn network capture on/off for a tab</span></div>
-          <div class="tool"><span class="name">network_requests</span><span class="desc">List captured requests, poll new ones with a cursor</span></div>
-          <div class="tool"><span class="name">network_body</span><span class="desc">Fetch a request's payload and response body on demand</span></div>
-        </div>
-      </div>
-      <p class="mono" id="noResults" style="display:none;color:var(--ink-3);margin-top:28px;font-size:14px">// no tools match that filter</p>
-    </div>
-
-    <!-- RESOURCES -->
-    <div class="tabpanel" id="panel-resources">
-      <div class="res-grid">
-        <div class="res reveal" data-d="1">
-          <div class="rh"><span class="ic"><i data-lucide="panels-top-left"></i></span><h3>Tab Management</h3></div>
-          <code>wisp://tabs</code>
-          <code>wisp://tab/{tabId}</code>
-          <p class="note">List all connected tabs, or get the full detail for a single one.</p>
-        </div>
-        <div class="res reveal" data-d="2">
-          <div class="rh"><span class="ic"><i data-lucide="terminal"></i></span><h3>Console Logs</h3></div>
-          <code>wisp://tab/{tabId}/console</code>
-          <p class="note">Paginate with <b>?before={ts}&amp;limit={n}</b>, filter by <b>?level=</b>. Max 500 per page; returns a <b>nextCursor</b>.</p>
-        </div>
-        <div class="res reveal" data-d="3">
-          <div class="rh"><span class="ic"><i data-lucide="camera"></i></span><h3>Screenshots</h3></div>
-          <code>wisp://tab/{tabId}/screenshot</code>
-          <p class="note">Options: <b>?selector={css}</b>, <b>?scale=0.1–1.0</b>, <b>?format=webp|jpeg|png</b>.</p>
-        </div>
-        <div class="res reveal" data-d="4">
-          <div class="rh"><span class="ic"><i data-lucide="target"></i></span><h3>Element Inspection</h3></div>
-          <code>wisp://tab/{tabId}/elementsFromPoint</code>
-          <p class="note">Pass <b>?x=&amp;y=</b> to get the full element stack with selectors, bounds, and styles.</p>
-        </div>
-        <div class="res reveal" data-d="5">
-          <div class="rh"><span class="ic"><i data-lucide="code-xml"></i></span><h3>DOM Access</h3></div>
-          <code>wisp://tab/{tabId}/dom</code>
-          <p class="note">Returns <b>outerHTML</b> for the page or a single element via <b>?selector={css}</b>.</p>
-        </div>
-        <div class="res reveal" data-d="6">
-          <div class="rh"><span class="ic"><i data-lucide="layout-list"></i></span><h3>Element Queries</h3></div>
-          <code>wisp://tab/{tabId}/elements</code>
-          <p class="note">Query all matches with <b>?selector={css}&amp;visible={true|false|all}</b>.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- HTTP -->
-    <div class="tabpanel" id="panel-http">
-      <div class="endpoint-base reveal"><i data-lucide="server" style="width:16px;height:16px"></i> Base URL <b>http://localhost:61822/</b> — the extension auto-connects on port 61822</div>
-      <div class="res-grid">
-        <div class="res reveal" data-d="1">
-          <div class="rh"><span class="ic"><i data-lucide="braces"></i></span><h3>Data Endpoints</h3></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tabs</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}/console</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}/dom</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}/elements</code></div>
-        </div>
-        <div class="res reveal" data-d="2">
-          <div class="rh"><span class="ic"><i data-lucide="image"></i></span><h3>Image Endpoints</h3></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}/screenshot</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}/screenshot/view</code></div>
-          <div class="endpoint"><span class="method">GET</span> <code>/tab/{tabId}/elementsFromPoint</code></div>
-          <p class="note">JSON with base64 data, a direct image file for embedding, and the element stack at any point.</p>
-        </div>
-        <div class="res reveal" data-d="3">
-          <div class="rh"><span class="ic"><i data-lucide="compass"></i></span><h3>Navigation &amp; Interaction (POST)</h3></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/navigate</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/back</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/forward</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/reload</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/show</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/click</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/hover</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/focus</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/blur</code></div>
-        </div>
-        <div class="res reveal" data-d="4">
-          <div class="rh"><span class="ic"><i data-lucide="keyboard"></i></span><h3>Input, scroll &amp; advanced (POST)</h3></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/fill</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/select</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/keypress</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/type</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/insertText</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/clear</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/scroll</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/evaluate</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/compose</code></div>
-        </div>
-        <div class="res reveal" data-d="5">
-          <div class="rh"><span class="ic"><i data-lucide="network"></i></span><h3>Network monitoring (POST)</h3></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/network_monitor</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/network_requests</code></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tab/{tabId}/network_body</code></div>
-          <p class="note">Toggle capture, then read the request list and pull individual response bodies — same JSON shapes as the MCP tools.</p>
-        </div>
-        <div class="res reveal" data-d="6">
-          <div class="rh"><span class="ic"><i data-lucide="layout-grid"></i></span><h3>Tabs &amp; debugging</h3></div>
-          <div class="endpoint"><span class="method">POST</span> <code>/tabs</code></div>
-          <div class="endpoint"><span class="method">DELETE</span> <code>/tab/{tabId}</code></div>
-          <p class="note">Open or close a tab. Hit any endpoint straight from your browser or <b>curl</b> to see exactly what your AI sees — no MCP client required.</p>
-        </div>
-      </div>
+    <div class="tools">
+      <span class="tool hot">navigate</span><span class="tool hot">click</span><span class="tool hot">fill</span>
+      <span class="tool hot">type</span><span class="tool hot">screenshot</span><span class="tool hot">dom</span>
+      <span class="tool">hover</span><span class="tool">focus</span><span class="tool">blur</span>
+      <span class="tool">select</span><span class="tool">clear</span><span class="tool">keypress</span>
+      <span class="tool">scroll</span><span class="tool">elements</span><span class="tool">elementsFromPoint</span>
+      <span class="tool">back</span><span class="tool">forward</span><span class="tool">reload</span>
+      <span class="tool">new_tab</span><span class="tool">close</span><span class="tool">show</span>
+      <span class="tool">list_tabs</span><span class="tool">tab_detail</span><span class="tool">dialog</span>
+      <span class="tool">console_logs</span><span class="tool">watch_console</span><span class="tool">network_monitor</span>
+      <span class="tool">network_requests</span><span class="tool">network_body</span><span class="tool">evaluate</span>
+      <span class="tool">compose</span>
     </div>
   </div>
 </section>
 
-<!-- ============================= WHY ============================= -->
-<section class="divider" id="why" data-screen-label="Why Wisp">
+<section>
   <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">Why Wisp</span>
-      <h2>Browser automation, without the baggage.</h2>
-      <p>Existing tools work — until they don't. Wisp was built from the ground up to fix the things that make AI browser control brittle.</p>
-    </div>
-    <div class="compare">
-      <div class="col bad reveal">
-        <h3>Other solutions</h3>
-        <div class="ch-sub">// the usual pain</div>
-        <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>Not really open source</b><span>Some track your usage and never publish the entire source.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>One AI at a time</b><span>Single-assistant limits block parallel workflows.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>Heavy setup</b><span>Selenium, chromedrivers, and headless configs to babysit.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>Cryptic errors</b><span>Failures that agents can't parse, let alone recover from.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>Flaky connections</b><span>WebSocket drops with no reconnection story.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>No way to debug</b><span>No easy way to test commands or watch what's happening.</span></span></div>
-      </div>
-      <div class="col good reveal" data-d="1">
-        <h3>Wisp</h3>
-        <div class="ch-sub">// the fix</div>
-        <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Fully open, end to end</b><span>Every line is on GitHub. Nothing phones home.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Many assistants, in parallel</b><span>Run multiple AI agents against your browser at once.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Just an extension</b><span>Install it and go — no drivers, no headless setup.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Errors agents understand</b><span>Clear, structured failures reported at each layer.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Resilient connections</b><span>Live status and reconnection built into the panel.</span></span></div>
-        <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Debuggable by design</b><span>Inspect, test, and watch every command in DevTools.</span></span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================= HOW IT WORKS ============================= -->
-<section class="divider why" id="how" data-screen-label="How it Works">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow">How it works</span>
-      <h2>A three-layer architecture, built for reliability.</h2>
-      <p>AI applications talk MCP to the Wisp server, which speaks WebSockets to the browser extension and its DevTools panel.</p>
-    </div>
-
-    <div class="arch reveal">
-      <img src="assets/images/HowWispWorks.webp" alt="Architecture diagram: AI applications connect over MCP to the Wisp MCP server, which connects over WebSockets to Chrome/Brave browser extensions and DevTools panels.">
-    </div>
-
-    <div class="points">
-      <div class="point reveal" data-d="1"><span class="pn">01</span><b>Clean separation</b><p>Each layer owns its responsibilities independently.</p></div>
-      <div class="point reveal" data-d="2"><span class="pn">02</span><b>Graceful errors</b><p>Failures are caught and reported clearly at every layer.</p></div>
-      <div class="point reveal" data-d="3"><span class="pn">03</span><b>Easy debugging</b><p>Monitor and test at any point in the stack.</p></div>
-      <div class="point reveal" data-d="4"><span class="pn">04</span><b>Concurrent sessions</b><p>Built for multiple browser connections at once.</p></div>
-    </div>
-
-    <div class="testclient">
-      <div class="reveal">
-        <span class="tag">Test client included</span>
-        <h3>Poke at the MCP server like an AI would.</h3>
-        <p>Wisp ships with an Electron test app that connects to the MCP server and lets you fire commands by hand — perfect for debugging, development, and understanding how agents will drive your setup.</p>
-        <ul>
-          <li><i data-lucide="check-circle-2"></i> Test every MCP tool interactively</li>
-          <li><i data-lucide="check-circle-2"></i> Real-time console output</li>
-          <li><i data-lucide="check-circle-2"></i> Parameter validation</li>
-          <li><i data-lucide="check-circle-2"></i> Connection status monitoring</li>
+    <span class="eyebrow">Controls</span>
+    <h2>Everything from the toolbar.</h2>
+    <div class="split">
+      <div>
+        <ul class="list">
+          <li><span><b>Auto-connect tabs.</b> Every page that loads joins on its own. Tabs you switch off stay off.</span></li>
+          <li><span><b>Connect or drop every tab</b> in one click when you start or finish a session.</span></li>
+          <li><span><b>Allow JS execution</b> is its own switch — per tab, or granted on each connect. It resets on disconnect.</span></li>
+          <li><span><b>Show the mascot and the log</b>, or turn them off when you want a clean screen recording.</span></li>
+          <li><span><b>Server status and tab count</b> read from a live probe, not a guess.</span></li>
         </ul>
       </div>
-      <div class="reveal" data-d="1">
-        <div class="browser">
-          <div class="browser-bar">
-            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="url">Wisp MCP Test Client</span>
-          </div>
-          <img src="assets/images/test-app-screenshot.webp" alt="The Wisp MCP test client showing an interactive tool-testing interface.">
+      <img src="assets/images/popup.png" alt="The Wisp toolbar popup: connection card showing Connected, quick actions for connect all, disconnect all, dashboard, copy tab ID, reconnect and reload, and switches for auto-connect, activity log, mascot and JavaScript execution.">
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <span class="eyebrow">Install</span>
+    <h2>Running in about two minutes.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div>
+          <h3>Build the server</h3>
+          <p>Node 18 or newer.</p>
+<pre><span class="c">git clone https://github.com/imtaqin/wisp.git</span>
+cd wisp/server
+npm install
+npm run build</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div>
+          <h3>Load the extension</h3>
+          <p>Open <code>chrome://extensions</code>, turn on Developer mode, choose <b>Load unpacked</b> and pick the <code>extension/</code> folder.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div>
+          <h3>Point your client at it</h3>
+          <p>Claude Code:</p>
+<pre>claude mcp add wisp -s user -- node <span class="k">/path/to/wisp</span>/server/dist/bridge.js</pre>
+          <p style="margin-top:14px">Claude Desktop, Cline and friends, in <code>mcpServers</code>:</p>
+<pre>{
+  "mcpServers": {
+    "wisp": {
+      "command": "node",
+      "args": ["<span class="k">/path/to/wisp</span>/server/dist/bridge.js"]
+    }
+  }
+}</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div>
+          <h3>Connect a tab</h3>
+          <p>Click the Wisp icon and flip the switch — or leave auto-connect on and every page joins as it loads. Ask your assistant to take a screenshot to check the wiring.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================= FINAL CTA ============================= -->
-<section data-screen-label="Get started">
+<section id="safety">
   <div class="wrap">
-    <div class="final reveal">
-      <h2>Ready to automate?</h2>
-      <p>Give your AI the power to browse the web — in the tab you're already using.</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="https://to.kap.co/wisp-extension"><i data-lucide="download"></i> Install Wisp</a>
-        <a class="btn btn-ghost" href="https://imtaqin.github.io/wisp/MCP_USAGE.html"><i data-lucide="book-open"></i> Read the Docs</a>
-      </div>
+    <span class="eyebrow">Safety</span>
+    <h2>Read this before you widen access.</h2>
+    <p class="lede" style="margin-top:14px">Wisp hands a program control of a browser that is logged into your email, your bank and your source control. The defaults keep that on one machine; changing them is your call to make deliberately.</p>
+
+    <div class="warn">
+      <h3>There is no authentication</h3>
+      <p>Anything that can reach the server port can drive every connected tab. The server listens on <code>127.0.0.1</code> by default. Setting <code>WISP_HOST=0.0.0.0</code> exposes it to your network — use that only on a network you trust, or reach it over a private overlay such as Tailscale instead. Never port-forward it to the internet.</p>
+      <p><b>Allow JS execution</b> lets a client run arbitrary script in a connected tab: reading storage, tokens and page content. Grant it per tab when you need it, and leave it off for tabs where that would matter.</p>
     </div>
   </div>
 </section>
 
-</main>
-
-<!-- ============================= FOOTER ============================= -->
-<footer class="divider">
-  <div class="wrap">
-    <div class="foot">
-      <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span> Wisp</a>
-      <div class="foot-links">
-        <a href="https://github.com/imtaqin/wisp"><i data-lucide="github" style="width:15px;height:15px;vertical-align:-2px"></i> GitHub</a>
-        <a href="https://imtaqin.github.io/wisp/MCP_USAGE.html">Documentation</a>
-        <a href="https://github.com/imtaqin/wisp/issues">Issues</a>
-        <a href="https://github.com/imtaqin/wisp#contributing">Contribute</a>
-        <a href="https://imtaqin.github.io/wisp/privacy.html">Privacy</a>
-      </div>
-    </div>
-    <p class="foot-note">Wisp is an independent, open-source project focused on reliable browser automation for AI applications.</p>
+<footer>
+  <div class="wrap row">
+    <span>MIT licensed.</span>
+    <span>A rebranded fork of <a href="https://github.com/williamkapke/kapture">Kapture</a> by William Kapke.</span>
+    <span class="sp">
+      <a href="https://github.com/imtaqin/wisp">GitHub</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="https://github.com/imtaqin/wisp/issues">Issues</a>
+    </span>
   </div>
 </footer>
 
-<script src="https://unpkg.com/lucide@0.456.0/dist/umd/lucide.min.js"></script>
-<script src="app.js"></script>
 </body>
 </html>

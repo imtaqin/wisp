@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 300" width="980" height="300" font-family="ui-sans-serif, system-ui, 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1 8 5 2 9" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <g fill="#1d1917" stroke="rgba(252,211,77,.22)">
+    <rect x="20" y="78" width="200" height="110" rx="16"/>
+    <rect x="300" y="78" width="200" height="110" rx="16"/>
+    <rect x="580" y="78" width="200" height="110" rx="16"/>
+    <rect x="820" y="78" width="140" height="110" rx="16"/>
+  </g>
+
+  <g fill="#f5efe6" font-size="16" font-weight="600" text-anchor="middle">
+    <text x="120" y="118">AI client</text>
+    <text x="400" y="118">Wisp server</text>
+    <text x="680" y="118">Extension</text>
+    <text x="890" y="118">Your tab</text>
+  </g>
+
+  <g fill="#a79e92" font-size="12.5" text-anchor="middle">
+    <text x="120" y="140">Claude Code · Desktop</text>
+    <text x="120" y="158">Hermes · Cline</text>
+    <text x="400" y="140">localhost:61822</text>
+    <text x="400" y="158">tool registry · tab registry</text>
+    <text x="680" y="140">service worker</text>
+    <text x="680" y="158">one socket per tab</text>
+    <text x="890" y="140">real Chrome</text>
+    <text x="890" y="158">your sessions</text>
+  </g>
+
+  <g stroke="#f59e0b" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+    <path d="M222 133h66"/>
+    <path d="M502 133h66"/>
+    <path d="M782 133h26"/>
+  </g>
+
+  <g fill="#fcd34d" font-size="11.5" font-weight="600" text-anchor="middle" letter-spacing=".04em">
+    <text x="255" y="124">MCP</text>
+    <text x="535" y="124">WEBSOCKET</text>
+    <text x="797" y="124">CDP</text>
+  </g>
+
+  <g fill="#78716c" font-size="11.5" text-anchor="middle">
+    <text x="255" y="152">stdio or ws</text>
+    <text x="535" y="152">outbound</text>
+  </g>
+
+  <text x="490" y="235" fill="#a79e92" font-size="13" text-anchor="middle">Many clients share one server. Each connected tab registers itself and can be targeted by id.</text>
+  <text x="490" y="258" fill="#78716c" font-size="12.5" text-anchor="middle">Commands never leave your machine in the default setup — the server listens on loopback.</text>
+</svg>
