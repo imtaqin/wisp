@@ -18,6 +18,13 @@ const wispOverlay = (() => {
   let idleTimer = null;
   let moodTimer = null;
   let blinkTimer = null;
+  let wanderTimer = null;
+  let logEnabled = true;
+  let ghost = null; // where the wisp is now, in viewport coords
+
+  const GHOST_W = 58;
+  const GHOST_H = 66;
+  const MARGIN = 16;
 
   const STYLE = `
     :host { all: initial; }
@@ -42,12 +49,18 @@ const wispOverlay = (() => {
     @keyframes breathe { 0%, 100% { opacity: .5 } 50% { opacity: 1 } }
 
     /* --- mascot ------------------------------------------------------ */
+    /* The wisp flies: .mascot-wrap is positioned at 0,0 and moved by transform,
+       so one transition drives the whole trip. */
     .mascot-wrap {
-      position: absolute; right: 18px; bottom: 18px;
+      position: absolute; top: 0; left: 0;
       display: flex; align-items: flex-end; gap: 8px;
-      transition: opacity .3s ease, transform .3s ease;
+      transform: translate(-999px, -999px);
+      transition: transform .9s cubic-bezier(.33, .9, .3, 1), opacity .3s ease;
+      will-change: transform;
     }
-    .layer.idle .mascot-wrap { opacity: .75; }
+    .mascot-wrap.flip { flex-direction: row-reverse; }
+    .mascot-wrap.flip .bubble { border-radius: 13px 13px 13px 3px; transform-origin: bottom left; }
+    .layer.idle .mascot-wrap { opacity: .8; }
     .mascot-wrap[hidden] { display: none; }
 
     .bubble {
@@ -126,8 +139,37 @@ const wispOverlay = (() => {
       to { transform: var(--at) scale(1.6); opacity: 0 }
     }
 
+    /* --- activity log ------------------------------------------------ */
+    .log {
+      position: absolute; left: 16px; bottom: 16px;
+      width: 236px; max-height: 190px; overflow: hidden;
+      display: flex; flex-direction: column-reverse; gap: 3px;
+      opacity: 0; transition: opacity .3s ease;
+    }
+    .log.show { opacity: 1; }
+    .log[hidden] { display: none; }
+    .log-row {
+      display: flex; gap: 7px; align-items: baseline;
+      padding: 4px 9px; border-radius: 8px;
+      background: rgba(29, 25, 23, .9);
+      box-shadow: 0 2px 10px rgba(12, 8, 4, .4), 0 0 0 1px rgba(252, 211, 77, .18);
+      color: #f5efe6; font-size: 10.5px; white-space: nowrap;
+      animation: logIn .25s ease-out;
+    }
+    .log-row time { color: #a79e92; font-variant-numeric: tabular-nums; font-size: 9.5px; }
+    .log-row .what { color: #fcd34d; font-weight: 600; }
+    .log-row .detail { color: #d6cec2; overflow: hidden; text-overflow: ellipsis; }
+    .log-row.err .what { color: #fb7185; }
+    .log-row.fade { opacity: .45; }
+    .log-row.fade-more { opacity: .2; }
+    @keyframes logIn {
+      from { opacity: 0; transform: translateY(6px) }
+      to { opacity: 1; transform: none }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .frame, .mascot, .wisp-spark, .tail path, .lid, .spark { animation: none }
+      .frame, .mascot, .wisp-spark, .tail path, .lid, .spark, .log-row { animation: none }
+      .mascot-wrap { transition: none }
       .ripple { animation-duration: 1ms }
     }
   `;
@@ -204,6 +246,7 @@ const wispOverlay = (() => {
         <div class="layer mood-idle">
           <div class="frame"></div>
           <div class="cursor" hidden>${CURSOR_SVG}</div>
+          <div class="log"></div>
           <div class="mascot-wrap">
             <div class="bubble"><b>Wisp</b> is driving this tab</div>
             ${MASCOT_SVG}
@@ -247,12 +290,83 @@ const wispOverlay = (() => {
   // Eyes track the virtual cursor: a few pixels of travel is enough to read as
   // "it is looking over there".
   function lookAt(x, y) {
-    const eyes = $('.eyes');
-    const rect = $('.mascot').getBoundingClientRect();
-    if (!rect.width) return;
-    const dx = Math.max(-1, Math.min(1, (x - (rect.left + rect.width / 2)) / 420));
-    const dy = Math.max(-1, Math.min(1, (y - (rect.top + rect.height / 2)) / 420));
-    eyes.style.transform = `translate(${(dx * 2.6).toFixed(2)}px, ${(dy * 2).toFixed(2)}px)`;
+    if (!ghost) return;
+    const dx = Math.max(-1, Math.min(1, (x - (ghost.x + GHOST_W / 2)) / 260));
+    const dy = Math.max(-1, Math.min(1, (y - (ghost.y + GHOST_H / 2)) / 260));
+    $('.eyes').style.transform = `translate(${(dx * 2.6).toFixed(2)}px, ${(dy * 2).toFixed(2)}px)`;
+  }
+
+  // Move the wisp so it hovers near (x, y) without sitting on top of it. It
+  // flips to the other side when it would fly off the right edge.
+  function flyTo(x, y, { near = true } = {}) {
+    const wrap = $('.mascot-wrap');
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const offsetX = near ? 26 : 0;
+    const offsetY = near ? -GHOST_H - 10 : 0;
+
+    let left = x + offsetX;
+    let top = y + offsetY;
+    const flip = left + GHOST_W + 190 > vw; // 190 = bubble headroom
+    if (flip) left = x - GHOST_W - offsetX;
+
+    left = Math.max(MARGIN, Math.min(vw - GHOST_W - MARGIN, left));
+    top = Math.max(MARGIN, Math.min(vh - GHOST_H - MARGIN, top));
+
+    wrap.classList.toggle('flip', flip);
+    wrap.style.transform = `translate(${Math.round(left)}px, ${Math.round(top)}px)`;
+    ghost = { x: left, y: top };
+  }
+
+  // Idle: drift around the page instead of parking in one corner
+  function wander() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const x = MARGIN + Math.random() * Math.max(1, vw - GHOST_W - MARGIN * 2);
+    const y = MARGIN + Math.random() * Math.max(1, vh - GHOST_H - MARGIN * 2);
+    flyTo(x, y, { near: false });
+  }
+
+  function startWander() {
+    clearInterval(wanderTimer);
+    wanderTimer = setInterval(() => {
+      const layer = host && $('.layer');
+      if (layer && layer.classList.contains('idle')) wander();
+    }, 4200);
+  }
+
+  const pad = (n) => String(n).padStart(2, '0');
+
+  function logLine(what, detail, ok = true) {
+    if (!logEnabled) return;
+    const log = $('.log');
+    const now = new Date();
+
+    const row = document.createElement('div');
+    row.className = `log-row${ok ? '' : ' err'}`;
+    const time = document.createElement('time');
+    time.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const label = document.createElement('span');
+    label.className = 'what';
+    label.textContent = what;
+    row.append(time, label);
+    if (detail) {
+      const extra = document.createElement('span');
+      extra.className = 'detail';
+      extra.textContent = detail;
+      row.append(extra);
+    }
+
+    log.prepend(row);
+    log.classList.add('show');
+
+    // Keep the newest six; the oldest two fade out before they go
+    const rows = [...log.children];
+    rows.forEach((el, i) => {
+      el.classList.toggle('fade', i === 4);
+      el.classList.toggle('fade-more', i === 5);
+    });
+    rows.slice(6).forEach((el) => el.remove());
   }
 
   function markBusy() {
@@ -266,6 +380,7 @@ const wispOverlay = (() => {
       layer.classList.add('idle');
       setMood('idle');
       say('watching this tab');
+      wander();
     }, IDLE_MS);
   }
 
@@ -278,6 +393,10 @@ const wispOverlay = (() => {
     bubble.classList.add('show');
   }
 
+  window.addEventListener('resize', () => {
+    if (host && ghost) flyTo(ghost.x, ghost.y, { near: false });
+  });
+
   return {
     setActive(on) {
       active = on;
@@ -287,12 +406,24 @@ const wispOverlay = (() => {
       if (on) {
         layer.classList.add('idle');
         say('is driving this tab');
+        if (!ghost) flyTo(window.innerWidth - 120, window.innerHeight - 120, { near: false });
+        startWander();
+        logLine('connected', location.host);
       } else {
         clearTimeout(idleTimer);
         clearTimeout(moodTimer);
+        clearInterval(wanderTimer);
         $('.cursor').hidden = true;
         $('.bubble').classList.remove('show');
+        $('.log').classList.remove('show');
+        $('.log').textContent = '';
       }
+    },
+
+    setLog(on) {
+      logEnabled = on !== false;
+      if (!host) return;
+      $('.log').hidden = !logEnabled;
     },
 
     setMascot(on) {
@@ -301,9 +432,10 @@ const wispOverlay = (() => {
       if (host) $('.mascot-wrap').hidden = !mascotEnabled;
     },
 
-    activity(label) {
+    activity(label, detail) {
       if (!active) return;
       say(label ? `is ${label.toLowerCase()}` : 'is working');
+      logLine(label ? label.toLowerCase() : 'working', detail);
       markBusy();
     },
 
@@ -311,7 +443,10 @@ const wispOverlay = (() => {
     outcome(ok) {
       if (!active) return;
       setMood(ok === false ? 'oops' : 'happy');
-      if (ok === false) say('hit an error', 'Wisp');
+      if (ok === false) {
+        say('hit an error', 'Wisp');
+        logLine('failed', '', false);
+      }
       markBusy();
     },
 
@@ -337,6 +472,7 @@ const wispOverlay = (() => {
         : 'opacity .3s ease';
       cursor.style.transform = `translate(${x - 2}px, ${y - 2}px)`;
       cursorPos = { x, y };
+      flyTo(x, y);
       lookAt(x, y);
       markBusy();
     },

@@ -620,6 +620,10 @@ const helpers = {
     wispOverlay.setMascot(show);
     return { success: true };
   },
+  _log: ({show}) => {
+    wispOverlay.setLog(show);
+    return { success: true };
+  },
   // Called by the background script when a command finishes: Kap reacts
   _outcome: ({ok}) => {
     wispOverlay.outcome(ok);
@@ -628,8 +632,9 @@ const helpers = {
 };
 
 // The mascot is opt-out (popup setting), applied before anything shows
-chrome.storage.local.get('showMascot').then(({ showMascot }) => {
+chrome.storage.local.get(['showMascot', 'showLog']).then(({ showMascot, showLog }) => {
   wispOverlay.setMascot(showMascot !== false);
+  wispOverlay.setLog(showLog !== false);
 }).catch(() => {});
 
 // Mouse position tracking with throttling

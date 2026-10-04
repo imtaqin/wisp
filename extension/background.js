@@ -33,15 +33,18 @@ chrome.storage.onChanged.addListener((changes, area) => {
     autoConnect = changes.autoConnect.newValue !== false;
   }
   if (changes.showMascot) {
-    broadcastMascot(changes.showMascot.newValue !== false);
+    broadcastToTabs('_mascot', { show: changes.showMascot.newValue !== false });
+  }
+  if (changes.showLog) {
+    broadcastToTabs('_log', { show: changes.showLog.newValue !== false });
   }
 });
 
-// Push the mascot setting to every tab that has the content script
-function broadcastMascot(show) {
+// Push an overlay setting to every tab that has the content script
+function broadcastToTabs(command, params) {
   chrome.tabs.query({}, (tabs) => {
     for (const tab of tabs) {
-      chrome.tabs.sendMessage(tab.id, { command: '_mascot', params: { show } }).catch(() => {});
+      chrome.tabs.sendMessage(tab.id, { command, params }).catch(() => {});
     }
   });
 }
@@ -204,102 +207,101 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // Handle all messages
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  // Handle content script messages
+// One async handler, one sync listener. The listener must NOT be async: Chrome
+// answers the sender with the listener's returned promise, which for an async
+// listener resolves to its `return true` - so sendResponse's value is thrown
+// away and callers see `true` instead of their result.
+async function handleMessage(request, sender) {
+  // Messages from content scripts
   if (sender.tab) {
+    const tabId = sender.tab.id;
+
     if (request.type === 'contentScriptReady') {
-      console.log(`Content script ready in tab ${sender.tab.id}`);
-      
+      console.log(`Content script ready in tab ${tabId}`);
+
       // Send current connection state to the newly ready content script
-      const tabState = tabManager.getTab(sender.tab.id);
+      const tabState = tabManager.getTab(tabId);
       if (tabState) {
-        const connectionState = tabState.getConnectionState();
-        sendConnectionStateToTab(sender.tab.id, connectionState);
+        sendConnectionStateToTab(tabId, tabState.getConnectionState());
       }
 
-      maybeAutoConnect(sender.tab.id);
-
-      sendResponse({ acknowledged: true });
-      return false;
+      maybeAutoConnect(tabId);
+      return { acknowledged: true };
     }
 
     if (request.type === 'connect') {
-      setOptedOut(sender.tab.id, false);
-      const result = await tabManager.connect(sender.tab.id);
-      sendResponse(result);
-      return true; // Keep message channel open for async response
+      setOptedOut(tabId, false);
+      return await tabManager.connect(tabId);
     }
 
     if (request.type === 'disconnect') {
-      setOptedOut(sender.tab.id, true);
-      const result = tabManager.disconnect(sender.tab.id);
-      sendResponse(result);
-      return false;
+      setOptedOut(tabId, true);
+      return tabManager.disconnect(tabId);
     }
 
     if (request.type === 'openPopup') {
       chrome.action.openPopup();
-      sendResponse({ ok: true });
-      return false;
+      return { ok: true };
     }
 
     if (request.type === 'mousePosition') {
-      // Store mouse position for the tab
-      const tabState = tabManager.getTab(sender.tab.id);
+      const tabState = tabManager.getTab(tabId);
       if (tabState) {
         tabState.setMousePosition({ x: request.x, y: request.y });
       }
-      return false;
+      return undefined;
     }
+
+    return undefined;
   }
 
-  // Handle messages from popup/panel (not from content scripts)
-  if (!sender.tab) {
-    if (request.type === 'connect' && request.tabId) {
-      setOptedOut(request.tabId, false);
-      const result = await tabManager.connect(request.tabId);
-      sendResponse(result);
-      return true; // Keep message channel open for async response
-    }
-
-    if (request.type === 'disconnect' && request.tabId) {
-      setOptedOut(request.tabId, true);
-      const result = tabManager.disconnect(request.tabId);
-      sendResponse(result);
-      return false;
-    }
-
-    if (request.type === 'getState' && request.tabId) {
-      const tabState = tabManager.getTab(request.tabId);
-      sendResponse(tabState ? tabState.getConnectionState() : { connected: false, status: 'disconnected' });
-      return false;
-    }
-
-    if (request.type === 'connectAll') {
-      connectAllTabs().then((connected) => sendResponse({ connected }));
-      return true;
-    }
-
-    if (request.type === 'disconnectAll') {
-      sendResponse({ disconnected: disconnectAllTabs() });
-      return false;
-    }
-
-    if (request.type === 'getStats') {
-      probeServer().then((serverOnline) => sendResponse({
-        connected: countConnected(),
-        tabs: tabManager.getAllTabs().length,
-        everConnected: serverOnline,
-      }));
-      return true;
-    }
-
-    if (request.type === 'setEvalAllowed' && request.tabId) {
-      const result = tabManager.setEvalAllowed(request.tabId, request.allowed);
-      sendResponse(result);
-      return false;
-    }
+  // Messages from the popup / DevTools panel
+  if (request.type === 'connect' && request.tabId) {
+    setOptedOut(request.tabId, false);
+    return await tabManager.connect(request.tabId);
   }
+
+  if (request.type === 'disconnect' && request.tabId) {
+    setOptedOut(request.tabId, true);
+    return tabManager.disconnect(request.tabId);
+  }
+
+  if (request.type === 'getState' && request.tabId) {
+    const tabState = tabManager.getTab(request.tabId);
+    return tabState ? tabState.getConnectionState() : { connected: false, status: 'disconnected' };
+  }
+
+  if (request.type === 'connectAll') {
+    return { connected: await connectAllTabs() };
+  }
+
+  if (request.type === 'disconnectAll') {
+    return { disconnected: disconnectAllTabs() };
+  }
+
+  if (request.type === 'getStats') {
+    return {
+      connected: countConnected(),
+      tabs: tabManager.getAllTabs().length,
+      serverOnline: await probeServer(),
+    };
+  }
+
+  if (request.type === 'setEvalAllowed' && request.tabId) {
+    return tabManager.setEvalAllowed(request.tabId, request.allowed);
+  }
+
+  return undefined;
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  handleMessage(request, sender)
+    .then(sendResponse)
+    .catch((error) => {
+      console.error('Message handler failed:', request?.type, error);
+      sendResponse({ ok: false, error: error.message });
+    });
+  return true; // answer asynchronously
 });
 
 // Update badge when active tab changes
@@ -320,7 +322,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    const destination = { url: 'https://github.com/imtaqin/wisp#welcome' };
+    const destination = { url: 'https://imtaqin.github.io/wisp/install.html' };
     // Navigate the current active tab instead of creating a new one
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
@@ -338,10 +340,10 @@ chrome.runtime.onInstalled.addListener((details) => {
     // since updates land automatically in the background while the user works.
     const currentVersion = chrome.runtime.getManifest().version;
     if (details.previousVersion && details.previousVersion !== currentVersion) {
-      chrome.tabs.create({ url: 'https://github.com/imtaqin/wisp/releases' });
+      chrome.tabs.create({ url: 'https://imtaqin.github.io/wisp/releases.html' });
     }
   }
 });
 
 // Open a friendly page when the user removes the extension.
-chrome.runtime.setUninstallURL('https://github.com/imtaqin/wisp#uninstalled');
+chrome.runtime.setUninstallURL('https://imtaqin.github.io/wisp/uninstalled.html');

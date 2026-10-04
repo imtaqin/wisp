@@ -11,6 +11,7 @@ const send = (msg) => chrome.runtime.sendMessage(msg);
 const SETTINGS = {
   autoConnect: 'auto-toggle',
   showMascot: 'mascot-toggle',
+  showLog: 'log-toggle',
   evalByDefault: 'eval-default-toggle',
 };
 
@@ -136,14 +137,15 @@ function updateUI(connected, status = 'disconnected', evalAllowed = false) {
 
 function refreshStats() {
   chrome.runtime.sendMessage({ type: 'getStats' }, (stats) => {
-    if (!stats) return;
+    if (typeof stats?.connected !== 'number') return;
     const n = stats.connected;
-    $('stats').textContent = n === 1 ? '1 tab connected' : `${n} tabs connected`;
+    $('stats').textContent =
+      n === 0 ? 'no tabs connected' : n === 1 ? '1 tab connected' : `${n} tabs connected`;
 
     const server = $('server');
-    server.classList.toggle('online', n > 0);
-    server.classList.toggle('offline', n === 0 && stats.everConnected);
-    $('server-text').textContent = n > 0 ? 'server online' : 'no server';
+    server.classList.toggle('online', stats.serverOnline);
+    server.classList.toggle('offline', !stats.serverOnline);
+    $('server-text').textContent = stats.serverOnline ? 'server online' : 'server offline';
   });
 }
 
