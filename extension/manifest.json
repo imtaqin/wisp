@@ -7,7 +7,7 @@
   "description": "Let AI assistants drive your browser over MCP",
   "author": "imtaqin",
   "homepage_url": "https://github.com/imtaqin/wisp",
-  "permissions": ["activeTab", "debugger", "storage"],
+  "permissions": ["activeTab", "debugger", "storage", "downloads", "clipboardRead", "clipboardWrite"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js",

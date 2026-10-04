@@ -252,6 +252,10 @@ tools:
     properties:
       tabId: *tabId
       <<: *selectorAndXpath
+      fullPage:
+        type: boolean
+        description: Capture the whole rendered page instead of the viewport
+        default: false
       scale:
         type: number
         description: Scale factor (0.1-1.0) to reduce screenshot size (default 0.3)
@@ -348,6 +352,290 @@ tools:
       y:
         type: number
         description: Y coordinate relative to the viewport
+
+  cookies_get:
+    description: Read cookies visible to the tab, optionally filtered by name or domain
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      name:
+        type: string
+        description: Only return cookies with this exact name
+      domain:
+        type: string
+        description: Only return cookies whose domain contains this string
+      urls:
+        type: array
+        items:
+          type: string
+        description: Limit to cookies that would be sent to these URLs
+
+  cookie_set:
+    description: >-
+      Set one cookie. Defaults to the current URL of the tab when neither url
+      nor domain is given. The browser still enforces secure and sameSite rules.
+    required: [tabId, name]
+    properties:
+      tabId: *tabId
+      name:
+        type: string
+        description: Cookie name
+      value:
+        type: string
+        description: Cookie value
+      url:
+        type: string
+        description: URL the cookie belongs to
+      domain:
+        type: string
+        description: Cookie domain, as an alternative to url
+      path:
+        type: string
+        description: Cookie path
+        default: /
+      secure:
+        type: boolean
+        description: Send only over HTTPS
+      httpOnly:
+        type: boolean
+        description: Hide from document.cookie
+      sameSite:
+        type: string
+        enum: [Strict, Lax, None]
+        description: SameSite policy
+      expires:
+        type: string
+        description: Expiry as an ISO date string; omit for a session cookie
+
+  cookies_clear:
+    description: >-
+      Delete cookies by name, or every cookie in the browser when no name is
+      given - which signs the user out of every site, so pass a name unless
+      that is genuinely intended.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      name:
+        type: string
+        description: Cookie name to delete
+      domain:
+        type: string
+        description: Restrict deletion to domains containing this string
+
+  storage_get:
+    description: Read localStorage or sessionStorage for the origin of the tab
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      area:
+        type: string
+        enum: [local, session]
+        description: Which store to read
+        default: local
+      key:
+        type: string
+        description: Read one key; omit to return every key
+
+  storage_set:
+    description: Write or remove one key in localStorage or sessionStorage
+    required: [tabId, key]
+    properties:
+      tabId: *tabId
+      area:
+        type: string
+        enum: [local, session]
+        description: Which store to write
+        default: local
+      key:
+        type: string
+        description: Key to write
+      value:
+        type: string
+        description: Value to store
+      remove:
+        type: boolean
+        description: Remove the key instead of writing it
+        default: false
+
+  clipboard_read:
+    description: >-
+      Read the system clipboard as text. Needs the tab focused and in front -
+      call show first.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+
+  clipboard_write:
+    description: >-
+      Write text to the system clipboard. Needs the tab focused and in front -
+      call show first.
+    required: [tabId, text]
+    properties:
+      tabId: *tabId
+      text:
+        type: string
+        description: Text to place on the clipboard
+
+  nav_history:
+    description: >-
+      Back and forward entries of this tab with titles and URLs. Scoped to the
+      tab - this is not the browsing history of the user.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      limit:
+        type: number
+        description: Return at most this many of the most recent entries
+        default: 25
+
+  downloads:
+    description: Recent browser downloads with their state, size and local filename
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      limit:
+        type: number
+        description: Maximum entries to return
+        default: 20
+      state:
+        type: string
+        enum: [in_progress, interrupted, complete]
+        description: Only return downloads in this state
+
+  set_viewport:
+    description: >-
+      Override viewport size, device scale and the mobile flag of the tab, for
+      checking responsive layouts. Persists until reset, so pass reset true
+      when finished.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      width:
+        type: number
+        description: Viewport width in CSS pixels
+      height:
+        type: number
+        description: Viewport height in CSS pixels
+      deviceScaleFactor:
+        type: number
+        description: Device pixel ratio; 0 keeps the system value
+        default: 0
+      mobile:
+        type: boolean
+        description: Emulate a mobile device, including touch
+        default: false
+      reset:
+        type: boolean
+        description: Restore the real window size
+        default: false
+
+  emulate:
+    description: >-
+      Emulate environment that the page can read: colour scheme, reduced
+      motion, geolocation, timezone, locale and user agent. Persists until reset.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      colorScheme:
+        type: string
+        enum: [light, dark]
+        description: Value reported for prefers-color-scheme
+      reducedMotion:
+        type: string
+        enum: [reduce, "no-preference"]
+        description: Value reported for prefers-reduced-motion
+      latitude:
+        type: number
+        description: Geolocation latitude, paired with longitude
+      longitude:
+        type: number
+        description: Geolocation longitude, paired with latitude
+      accuracy:
+        type: number
+        description: Geolocation accuracy in metres
+        default: 50
+      timezone:
+        type: string
+        description: IANA timezone id, e.g. Asia/Jakarta
+      locale:
+        type: string
+        description: Accept-Language value, e.g. id-ID
+      userAgent:
+        type: string
+        description: User-Agent string to report
+      reset:
+        type: boolean
+        description: Clear every override set here
+        default: false
+
+  throttle:
+    description: >-
+      Emulate network conditions for the tab, to see a page behave on a slow
+      link. Persists until reset.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      profile:
+        type: string
+        enum: [slow-3g, fast-3g, slow-4g, offline]
+        description: Preset condition
+      latency:
+        type: number
+        description: Added round-trip latency in milliseconds, instead of a profile
+      downloadThroughput:
+        type: number
+        description: Bytes per second down; -1 for unlimited
+      uploadThroughput:
+        type: number
+        description: Bytes per second up; -1 for unlimited
+      reset:
+        type: boolean
+        description: Restore full speed
+        default: false
+
+  block_requests:
+    description: >-
+      Block requests whose URL matches any wildcard pattern - useful to test a
+      page without analytics, fonts or a flaky third party. Persists until reset.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      patterns:
+        type: array
+        items:
+          type: string
+        description: Wildcard URL patterns, e.g. "*.doubleclick.net/*"
+      reset:
+        type: boolean
+        description: Stop blocking everything
+        default: false
+
+  pdf:
+    description: Print the page to PDF, returned as base64
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      landscape:
+        type: boolean
+        description: Landscape orientation
+        default: false
+      printBackground:
+        type: boolean
+        description: Include background colours and images
+        default: true
+      scale:
+        type: number
+        description: Render scale
+        default: 1
+      paperWidth:
+        type: number
+        description: Paper width in inches
+      paperHeight:
+        type: number
+        description: Paper height in inches
+      pageRanges:
+        type: string
+        description: Pages to print, e.g. "1-3, 5"
 
   double_click:
     description: >-

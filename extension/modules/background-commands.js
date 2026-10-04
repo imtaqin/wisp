@@ -9,6 +9,8 @@ import { type, insertText, clear } from './background-text.js';
 import { dialog } from './background-dialog.js';
 import { waitIdle, a11ySnapshot } from './background-inspect.js';
 import { doubleClick, rightClick, dragAndDrop, uploadFile } from './background-pointer.js';
+import { cookiesGet, cookieSet, cookiesClear, navHistory, downloadsList } from './background-data.js';
+import { setViewport, emulate, throttle, blockRequests, pdf } from './background-emulate.js';
 
 export const getFromContentScript = async (tabId, command, params, ) => {
   return await chrome.tabs.sendMessage(tabId, { command, params });
@@ -174,5 +176,15 @@ export const backgroundCommands = {
   double_click: doubleClick,
   right_click: rightClick,
   drag_and_drop: dragAndDrop,
-  upload_file: uploadFile
+  upload_file: uploadFile,
+  cookies_get: cookiesGet,
+  cookie_set: cookieSet,
+  cookies_clear: cookiesClear,
+  nav_history: navHistory,
+  downloads: downloadsList,
+  set_viewport: setViewport,
+  emulate,
+  throttle,
+  block_requests: blockRequests,
+  pdf
 }

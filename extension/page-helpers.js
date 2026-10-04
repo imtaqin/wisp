@@ -732,6 +732,60 @@ const helpers = {
     }, selector, xpath);
   },
 
+  storage_get: ({ area = 'local', key }) => {
+    const store = area === 'session' ? sessionStorage : localStorage;
+    try {
+      if (key) {
+        return respondWith({ area, key, value: store.getItem(key) });
+      }
+      const items = {};
+      for (let i = 0; i < store.length; i++) {
+        const k = store.key(i);
+        items[k] = store.getItem(k);
+      }
+      return respondWith({ area, items, count: store.length });
+    } catch (e) {
+      // Storage access throws on opaque origins and when site data is blocked
+      return respondWithError('STORAGE_UNAVAILABLE', e.message);
+    }
+  },
+
+  storage_set: ({ area = 'local', key, value, remove = false }) => {
+    if (!key) return respondWithError('KEY_REQUIRED', 'A key parameter is required');
+    const store = area === 'session' ? sessionStorage : localStorage;
+    try {
+      if (remove) {
+        store.removeItem(key);
+        return respondWith({ area, key, removed: true });
+      }
+      store.setItem(key, String(value ?? ''));
+      return respondWith({ area, key, set: true });
+    } catch (e) {
+      return respondWithError('STORAGE_UNAVAILABLE', e.message);
+    }
+  },
+
+  clipboard_write: async ({ text }) => {
+    if (text === undefined) return respondWithError('TEXT_REQUIRED', 'A text parameter is required');
+    try {
+      await navigator.clipboard.writeText(String(text));
+      return respondWith({ written: true, length: String(text).length });
+    } catch (e) {
+      return respondWithError('CLIPBOARD_BLOCKED',
+        `${e.message}. The clipboard is only writable while the tab is focused - bring it to the front with show first.`);
+    }
+  },
+
+  clipboard_read: async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      return respondWith({ text, length: text.length });
+    } catch (e) {
+      return respondWithError('CLIPBOARD_BLOCKED',
+        `${e.message}. Reading the clipboard needs the tab focused and the page permitted - bring it to the front with show first.`);
+    }
+  },
+
   _cursor: ({show}) => {
     try {
       const position = wispOverlay.showCursor(show !== false);
