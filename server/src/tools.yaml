@@ -349,6 +349,116 @@ tools:
         type: number
         description: Y coordinate relative to the viewport
 
+  double_click:
+    description: >-
+      Double click an element (selector or xpath) or a viewport coordinate.
+      Dispatched through CDP, so it reaches content a selector cannot - iframes
+      included.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      x:
+        type: number
+        description: Viewport x in CSS pixels, paired with y, instead of a selector
+      y:
+        type: number
+        description: Viewport y in CSS pixels, paired with x, instead of a selector
+
+  right_click:
+    description: >-
+      Right click an element or coordinate. The page's own contextmenu handlers
+      fire; a native browser context menu cannot be read or clicked by any tool.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      x:
+        type: number
+        description: Viewport x in CSS pixels, paired with y, instead of a selector
+      y:
+        type: number
+        description: Viewport y in CSS pixels, paired with x, instead of a selector
+
+  drag_and_drop:
+    description: >-
+      Press on a source, move across the page in steps, and release on a target.
+      The intermediate moves are what make HTML5 and JS drag libraries engage.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      x:
+        type: number
+        description: Source viewport x, paired with y, instead of a selector
+      y:
+        type: number
+        description: Source viewport y, paired with x, instead of a selector
+      toSelector:
+        type: string
+        description: CSS selector for the drop target
+      toXpath:
+        type: string
+        description: XPath for the drop target
+      toX:
+        type: number
+        description: Drop viewport x, paired with toY
+      toY:
+        type: number
+        description: Drop viewport y, paired with toX
+      steps:
+        type: number
+        description: How many intermediate moves to dispatch
+        default: 12
+
+  upload_file:
+    description: >-
+      Set files on an <input type="file">. Paths are read by the browser
+      process, so they must exist on the machine running Chrome.
+    required: [tabId, files]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      files:
+        type: array
+        items:
+          type: string
+        description: Absolute paths on the machine running the browser
+
+  scroll_to:
+    description: Scroll an element into view, without clicking or focusing it
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      block:
+        type: string
+        enum: [start, center, end, nearest]
+        description: Where the element should land vertically
+        default: center
+      behavior:
+        type: string
+        enum: [auto, smooth, instant]
+        description: Scrolling behaviour
+        default: smooth
+
+  highlight:
+    description: >-
+      Draw a temporary box over every element matching the selector, with an
+      optional label. Useful to show a person what the assistant is about to
+      act on. Purely visual - it is hidden from screenshots.
+    required: [tabId]
+    properties:
+      tabId: *tabId
+      <<: *selectorAndXpath
+      label:
+        type: string
+        description: Short text drawn above the box
+      durationMs:
+        type: number
+        description: How long the boxes stay on screen
+        default: 2500
+
   wait_for:
     description: >-
       Wait until an element (selector or xpath) or a piece of visible text

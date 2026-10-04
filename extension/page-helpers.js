@@ -705,6 +705,33 @@ const helpers = {
     return respondWith(result, selector, xpath);
   },
 
+  scroll_to: ({ selector, xpath, block = 'center', behavior = 'smooth' }) => {
+    if (!selector && !xpath) return requireSelectorOrXpath();
+    const element = findAllElements(selector, xpath)[0];
+    if (!element) return elementNotFound(selector, xpath);
+
+    element.scrollIntoView({ block, inline: 'nearest', behavior });
+    return respondWith({ scrolledTo: true, element: getElementData(element) }, selector, xpath);
+  },
+
+  highlight: ({ selector, xpath, label, durationMs = 2500 }) => {
+    if (!selector && !xpath) return requireSelectorOrXpath();
+    const elements = findAllElements(selector, xpath);
+    if (!elements.length) return elementNotFound(selector, xpath);
+
+    const boxes = elements.map((element) => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+    });
+    wispOverlay.highlight(boxes, label, durationMs);
+
+    return respondWith({
+      highlighted: boxes.length,
+      durationMs,
+      elements: elements.map(getElementData)
+    }, selector, xpath);
+  },
+
   _cursor: ({show}) => {
     try {
       const position = wispOverlay.showCursor(show !== false);

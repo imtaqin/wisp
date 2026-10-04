@@ -149,6 +149,24 @@ const wispOverlay = (() => {
       to { transform: var(--at) scale(1.6); opacity: 0 }
     }
 
+    /* --- highlight boxes --------------------------------------------- */
+    .hl {
+      position: absolute; border: 2px solid var(--amber);
+      border-radius: 4px; background: rgba(245, 158, 11, .12);
+      box-shadow: 0 0 0 1px rgba(255, 251, 235, .35), 0 0 18px rgba(245, 158, 11, .45);
+      animation: hlIn .22s ease-out;
+    }
+    .hl-tag {
+      position: absolute; transform: translateY(-100%);
+      padding: 3px 7px; border-radius: 6px 6px 6px 0;
+      background: var(--amber); color: #231709;
+      font-size: 10.5px; font-weight: 700; white-space: nowrap;
+    }
+    @keyframes hlIn {
+      from { opacity: 0; transform: scale(1.06) }
+      to { opacity: 1; transform: none }
+    }
+
     /* --- activity log ------------------------------------------------ */
     .log {
       position: absolute; left: 16px; bottom: 16px;
@@ -178,7 +196,7 @@ const wispOverlay = (() => {
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .frame, .mascot, .spk, .hull, .shadow, .lid, .log-row { animation: none }
+      .frame, .mascot, .spk, .hull, .shadow, .lid, .log-row, .hl { animation: none }
       .mascot-wrap { transition: none }
       .ripple { animation-duration: 1ms }
     }
@@ -503,6 +521,27 @@ const wispOverlay = (() => {
       $('.layer').appendChild(ripple);
       ripple.addEventListener('animationend', () => ripple.remove());
       setTimeout(() => ripple.remove(), 1000); // fallback if animations are off
+      markBusy();
+    },
+
+    // Draw boxes over elements so a human can see what the client picked
+    highlight(boxes, label, durationMs = 2500) {
+      const layer = $('.layer');
+      layer.classList.add('active');
+      const drawn = boxes.map((box) => {
+        const el = document.createElement('div');
+        el.className = 'hl';
+        el.style.cssText = `left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px`;
+        if (label) {
+          const tag = document.createElement('div');
+          tag.className = 'hl-tag';
+          tag.textContent = label;
+          el.appendChild(tag);
+        }
+        layer.appendChild(el);
+        return el;
+      });
+      setTimeout(() => drawn.forEach((el) => el.remove()), Math.max(0, durationMs));
       markBusy();
     },
 

@@ -8,6 +8,7 @@ import { evaluate } from './background-evaluate.js';
 import { type, insertText, clear } from './background-text.js';
 import { dialog } from './background-dialog.js';
 import { waitIdle, a11ySnapshot } from './background-inspect.js';
+import { doubleClick, rightClick, dragAndDrop, uploadFile } from './background-pointer.js';
 
 export const getFromContentScript = async (tabId, command, params, ) => {
   return await chrome.tabs.sendMessage(tabId, { command, params });
@@ -169,5 +170,9 @@ export const backgroundCommands = {
   clear,
   dialog,
   wait_idle: waitIdle,
-  a11y_snapshot: a11ySnapshot
+  a11y_snapshot: a11ySnapshot,
+  double_click: doubleClick,
+  right_click: rightClick,
+  drag_and_drop: dragAndDrop,
+  upload_file: uploadFile
 }
