@@ -1,12 +1,12 @@
-# Kapture MCP Test Client
+# Wisp MCP Test Client
 
-A robust Electron-based test application for the Kapture MCP server that connects via WebSocket to test the multi-connection capability.
+A robust Electron-based test application for the Wisp MCP server that connects via WebSocket to test the multi-connection capability.
 
 ## Overview
 
-This test client provides a comprehensive development and testing environment for the Kapture MCP server, featuring a modern browser-style interface with real-time tab management, tool discovery, and execution capabilities.
+This test client provides a comprehensive development and testing environment for the Wisp MCP server, featuring a modern browser-style interface with real-time tab management, tool discovery, and execution capabilities.
 
-![Kapture MCP Test Client Interface](screenshot.webp)
+![Wisp MCP Test Client Interface](screenshot.webp)
 
 ## Key Features
 
@@ -65,9 +65,9 @@ npm start
 ### Basic Workflow
 1. Start the MCP server separately (e.g., via Claude Desktop or `npm start`)
 2. Launch the test app - it will connect via WebSocket
-3. Open Chrome with the Kapture extension installed
+3. Open Chrome with the Wisp extension installed
 4. Navigate to any webpage and open DevTools
-5. Go to the Kapture panel and select the server to connect
+5. Go to the Wisp panel and select the server to connect
 6. The connection to the tab appears instantly in test app
 
 ### Tool Execution
@@ -161,9 +161,9 @@ When testing new MCP tools:
 ## Requirements
 
 - Node.js 16+
-- Chrome browser with Kapture extension
+- Chrome browser with Wisp extension
 - macOS, Windows, or Linux
 
 ## License
 
-Part of the Kapture project - see main repository for license details.
+Part of the Wisp project - see main repository for license details.

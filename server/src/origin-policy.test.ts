@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { isOriginAllowed, isWebSocketOriginAllowed, parseAllowedOrigins, isAssistantsReadOrigin, isAssistantsWriteOrigin, KAPTURE_EXTENSION_ID } from './origin-policy.js';
+import { isOriginAllowed, isWebSocketOriginAllowed, parseAllowedOrigins, isAssistantsReadOrigin, isAssistantsWriteOrigin, WISP_EXTENSION_ID } from './origin-policy.js';
 
 // Tests for the control-plane Origin allow-list (origin-policy.ts).
 
-const EXT = `chrome-extension://${KAPTURE_EXTENSION_ID}`;
+const EXT = `chrome-extension://${WISP_EXTENSION_ID}`;
 const OTHER_EXT = 'chrome-extension://abcdefghijklmnopabcdefghijklmnop';
 
 test('non-browser callers (no Origin) are allowed - scripts, bridge, curl', () => {
@@ -18,7 +18,7 @@ test('the general gate (HTTP) rejects all chrome-extension origins', () => {
 });
 
 test('allow-listed web origins are allowed', () => {
-  assert.equal(isOriginAllowed('https://williamkapke.github.io'), true); // hosted dashboard
+  assert.equal(isOriginAllowed('https://imtaqin.github.io'), true); // hosted dashboard
   assert.equal(isOriginAllowed('http://127.0.0.1:61822'), true);         // server-hosted test.html
   assert.equal(isOriginAllowed('http://localhost:61822'), true);
 });
@@ -26,7 +26,7 @@ test('allow-listed web origins are allowed', () => {
 test('hostile / unknown web origins are rejected', () => {
   assert.equal(isOriginAllowed('https://evil.com'), false);
   assert.equal(isOriginAllowed('http://evil.com'), false);
-  assert.equal(isOriginAllowed('https://williamkapke.github.io.evil.com'), false);
+  assert.equal(isOriginAllowed('https://imtaqin.github.io.evil.com'), false);
   assert.equal(isOriginAllowed('http://localhost:8080'), false); // not on the default list
 });
 
@@ -35,12 +35,12 @@ test('an Origin of "null" is rejected', () => {
 });
 
 test('a duplicated Origin header (array) is rejected', () => {
-  assert.equal(isOriginAllowed(['https://williamkapke.github.io', 'https://evil.com']), false);
+  assert.equal(isOriginAllowed(['https://imtaqin.github.io', 'https://evil.com']), false);
 });
 
 // The extension's one channel is the root WebSocket. A chrome-extension origin is
 // accepted there and nowhere else - not on /mcp, not on HTTP.
-test('WS root: only the pinned Kapture extension is accepted', () => {
+test('WS root: only the pinned Wisp extension is accepted', () => {
   assert.equal(isWebSocketOriginAllowed('/', EXT), true);
   assert.equal(isWebSocketOriginAllowed('/', OTHER_EXT), false);
 });
@@ -57,7 +57,7 @@ test('WS: no-Origin clients (the bridge / scripts) are accepted on /mcp', () => 
 
 test('WS: allow-listed web origins pass, hostile ones are rejected, on both paths', () => {
   for (const path of ['/', '/mcp']) {
-    assert.equal(isWebSocketOriginAllowed(path, 'https://williamkapke.github.io'), true);
+    assert.equal(isWebSocketOriginAllowed(path, 'https://imtaqin.github.io'), true);
     assert.equal(isWebSocketOriginAllowed(path, 'https://evil.com'), false);
   }
 });
@@ -67,7 +67,7 @@ test('WS: allow-listed web origins pass, hostile ones are rejected, on both path
 test('assistants read: welcome-page origins only (localhost + GitHub Pages)', () => {
   assert.equal(isAssistantsReadOrigin('http://localhost:61822'), true);
   assert.equal(isAssistantsReadOrigin('http://127.0.0.1:61822'), true);
-  assert.equal(isAssistantsReadOrigin('https://williamkapke.github.io'), true); // localhost probe
+  assert.equal(isAssistantsReadOrigin('https://imtaqin.github.io'), true); // localhost probe
   assert.equal(isAssistantsReadOrigin(undefined), false);                       // no-Origin script/curl
   assert.equal(isAssistantsReadOrigin('https://evil.com'), false);
 });
@@ -75,16 +75,16 @@ test('assistants read: welcome-page origins only (localhost + GitHub Pages)', ()
 test('assistants write: localhost only (not GitHub Pages, not no-Origin)', () => {
   assert.equal(isAssistantsWriteOrigin('http://localhost:61822'), true);
   assert.equal(isAssistantsWriteOrigin('http://127.0.0.1:61822'), true);
-  assert.equal(isAssistantsWriteOrigin('https://williamkapke.github.io'), false); // probe-and-redirect only
+  assert.equal(isAssistantsWriteOrigin('https://imtaqin.github.io'), false); // probe-and-redirect only
   assert.equal(isAssistantsWriteOrigin(undefined), false);
   assert.equal(isAssistantsWriteOrigin('https://evil.com'), false);
 });
 
-test('KAPTURE_ALLOWED_ORIGINS extends the allow-list', () => {
+test('WISP_ALLOWED_ORIGINS extends the allow-list', () => {
   const allowed = parseAllowedOrigins('http://localhost:8080, https://my.dashboard');
   assert.equal(isOriginAllowed('http://localhost:8080', allowed), true);
   assert.equal(isOriginAllowed('https://my.dashboard', allowed), true);
   assert.equal(isOriginAllowed('https://evil.com', allowed), false);
   // defaults still present
-  assert.equal(isOriginAllowed('https://williamkapke.github.io', allowed), true);
+  assert.equal(isOriginAllowed('https://imtaqin.github.io', allowed), true);
 });

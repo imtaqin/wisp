@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Kapture - Get Started in 2 Steps</title>
-    <meta name="description" content="Get started with Kapture browser automation in just 2 simple steps">
-    <link rel="icon" type="image/svg+xml" href="https://williamkapke.github.io/kapture/assets/logo.svg">
-    <link rel="alternate icon" type="image/png" href="https://williamkapke.github.io/kapture/assets/images/icon48.png">
-    <link rel="stylesheet" href="https://williamkapke.github.io/kapture/styles.css">
+    <title>Welcome to Wisp - Get Started in 2 Steps</title>
+    <meta name="description" content="Get started with Wisp browser automation in just 2 simple steps">
+    <link rel="icon" type="image/svg+xml" href="https://imtaqin.github.io/wisp/assets/logo.svg">
+    <link rel="alternate icon" type="image/png" href="https://imtaqin.github.io/wisp/assets/images/icon48.png">
+    <link rel="stylesheet" href="https://imtaqin.github.io/wisp/styles.css">
     <style>
         body {
             margin: 0;
@@ -598,7 +598,7 @@
         }
 
         /* Enable prompt styles */
-        .kapture-connected .has-installed-assistant .enable-prompt {
+        .wisp-connected .has-installed-assistant .enable-prompt {
             display: block;
             position: absolute;
             right: 18px;
@@ -615,7 +615,7 @@
                 opacity: 1;
             }
         }
-        .kapture-connected .has-installed-assistant.has-configured-assistant .enable-prompt {
+        .wisp-connected .has-installed-assistant.has-configured-assistant .enable-prompt {
             animation: fadeOut 0.3s ease-in-out forwards;
             pointer-events: none;
         }
@@ -833,7 +833,7 @@
 <body>
 <div class="welcome-container">
     <div class="welcome-header">
-        <h1>Welcome to Kapture MCP!</h1>
+        <h1>Welcome to Wisp MCP!</h1>
     </div>
 
     <div class="steps-container">
@@ -846,9 +846,9 @@
                 </div>
                 <h2>Pin the Extension</h2>
             </div>
-            <p>Click the puzzle piece icon in your browser toolbar and pin Kapture for easy access.</p>
+            <p>Click the puzzle piece icon in your browser toolbar and pin Wisp for easy access.</p>
             <div class="pin-visual">
-                <img src="https://williamkapke.github.io/kapture/assets/images/kapture_pin.png" alt="Pin Kapture extension">
+                <img src="https://imtaqin.github.io/wisp/assets/images/wisp_pin.png" alt="Pin Wisp extension">
             </div>
         </div>
 
@@ -866,10 +866,10 @@
                 <h2>Setup Your Assistants</h2>
             </div>
             <div class="code-section" id="code-section">
-                <p>Run this command in your terminal to configure your assistants to use Kapture.</p>
+                <p>Run this command in your terminal to configure your assistants to use Wisp.</p>
                 <div class="code-box" onclick="copyCommand()">
                     <span class="prefix">$</span>
-                    <span class="command">npx -y kapture-mcp setup</span>
+                    <span class="command">npx -y wisp-mcp setup</span>
                     <button class="copy-button" aria-label="Copy command">
                         <svg id="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -883,7 +883,7 @@
                 </div>
             </div>
             <div class="server-status" id="server-status">
-                <span class="status-label">Kapture MCP Server:</span>
+                <span class="status-label">Wisp MCP Server:</span>
                 <div class="status-indicator searching" id="status-indicator"></div>
                 <span class="status-text searching" id="status-text">Searching <span class="dots"></span></span>
             </div>
@@ -936,8 +936,8 @@
     </div>
     <div class="success-state">
         <h2>🎉 You're All Set!</h2>
-        <p>Kapture is ready to use. Check out the how-to guide to see it in action.</p>
-        <a href="https://williamkapke.github.io/kapture/how-to.html" class="next-button">
+        <p>Wisp is ready to use. Check out the how-to guide to see it in action.</p>
+        <a href="https://imtaqin.github.io/wisp/how-to.html" class="next-button">
             View How-To Guide
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
@@ -949,15 +949,15 @@
         <details class="other-assistants-details">
             <summary>Manual Configuration for Other Assistants</summary>
             <div class="details-content">
-                <p>For assistants not listed above, you can manually add Kapture to their MCP configuration:</p>
+                <p>For assistants not listed above, you can manually add Wisp to their MCP configuration:</p>
 
                 <div class="manual-config-box">
                     <h4>MCP Configuration</h4>
                     <pre><code>{
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }</code></pre>
@@ -971,7 +971,7 @@
                         <li><strong>Custom integrations:</strong> Refer to your tool's MCP documentation</li>
                     </ul>
 
-                    <p class="note">Note: After adding the configuration, restart your assistant to connect to Kapture.</p>
+                    <p class="note">Note: After adding the configuration, restart your assistant to connect to Wisp.</p>
                 </div>
             </div>
         </details>
@@ -980,7 +980,7 @@
 
 <script>
   function copyCommand() {
-    const command = 'npx -y kapture-mcp setup';
+    const command = 'npx -y wisp-mcp setup';
     navigator.clipboard.writeText(command).then(() => {
       // Show check icon
       document.getElementById('copy-icon').style.display = 'none';
@@ -1135,7 +1135,7 @@
         // Only redirect if we're not already on the local server welcome page
         if (!currentUrl.startsWith('http://localhost:61822/welcome') &&
           !currentUrl.startsWith('http://127.0.0.1:61822/welcome')) {
-          console.log('Navigating to local Kapture server welcome page...');
+          console.log('Navigating to local Wisp server welcome page...');
           window.location.href = targetUrl;
         } else {
           // We're on localhost, show the other assistants section
@@ -1169,9 +1169,9 @@
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
         const body = document.body;
-        if (body.classList.contains('kapture-connected')) {
+        if (body.classList.contains('wisp-connected')) {
           updateServerStatus('connected');
-        } else if (body.classList.contains('kapture-connecting')) {
+        } else if (body.classList.contains('wisp-connecting')) {
           updateServerStatus('searching');
         } else {
           updateServerStatus('disconnected');
@@ -1186,10 +1186,10 @@
     attributeFilter: ['class']
   });
 
-  // Auto-connect when Kapture is loaded
-  window.addEventListener('kapture-loaded', () => {
-    console.log('Kapture loaded! Auto-connecting...');
-    const event = new CustomEvent('kapture-message', {
+  // Auto-connect when Wisp is loaded
+  window.addEventListener('wisp-loaded', () => {
+    console.log('Wisp loaded! Auto-connecting...');
+    const event = new CustomEvent('wisp-message', {
       detail: { type: 'connect' }
     });
     window.dispatchEvent(event);
@@ -1201,12 +1201,12 @@
     // temp hack until extension v14 is published
     const currentUrl = window.location.href;
     if (currentUrl.startsWith('http://localhost:61822/welcome') || currentUrl.startsWith('http://127.0.0.1:61822/welcome')) {
-      document.body.classList.add('kapture-connected')
+      document.body.classList.add('wisp-connected')
     }
 
-    if (document.body.classList.contains('kapture-connected')) {
+    if (document.body.classList.contains('wisp-connected')) {
       updateServerStatus('connected');
-    } else if (document.body.classList.contains('kapture-connecting')) {
+    } else if (document.body.classList.contains('wisp-connecting')) {
       updateServerStatus('searching');
     }
   }, 100);

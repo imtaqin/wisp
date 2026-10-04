@@ -8,7 +8,7 @@ export async function evaluate(tabState, { code, evalTimeout: timeout = 5000 }) 
   const tabId = tabState.tabId;
 
   if (!tabState.evalAllowed) {
-    return respondWithError(tabId, 'EVAL_NOT_ALLOWED', 'JavaScript execution is not enabled for this tab. The user must turn on "Allow JavaScript Execution" in the Kapture extension popup or DevTools panel.');
+    return respondWithError(tabId, 'EVAL_NOT_ALLOWED', 'JavaScript execution is not enabled for this tab. The user must turn on "Allow JavaScript Execution" in the Wisp extension popup or DevTools panel.');
   }
 
   return attachDebugger(tabId, async () => {

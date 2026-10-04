@@ -113,7 +113,7 @@ describe('Network Monitoring Tool Tests', function() {
     const data = await framework.callToolAndParse('network_body', { requestId: doc.requestId });
     expect(data.requestId).to.equal(doc.requestId);
     expect(data.base64Encoded).to.equal(false);
-    expect(data.body).to.be.a('string').that.includes('Kapture');
+    expect(data.body).to.be.a('string').that.includes('Wisp');
     expect(data.size).to.be.greaterThan(0);
     expect(data.responseHeaders).to.be.an('object');
     expect(data.requestHeaders).to.be.an('object');

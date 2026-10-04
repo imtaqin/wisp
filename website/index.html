@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kapture — Browser automation for AI</title>
+<title>Wisp — Browser automation for AI</title>
 <meta name="description" content="Control your browser with AI using Chrome DevTools and the Model Context Protocol. 100% open source, no analytics, no trackers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,17 +27,17 @@
 <!-- ============================= NAV ============================= -->
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
-    <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span> Kapture</a>
+    <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span> Wisp</a>
     <nav class="nav-links">
       <a href="#action">In Action</a>
       <a href="#tools">Tools</a>
-      <a href="#why">Why Kapture</a>
+      <a href="#why">Why Wisp</a>
       <a href="#how">How it Works</a>
-      <a href="https://williamkapke.github.io/kapture/MCP_USAGE.html">Docs</a>
+      <a href="https://imtaqin.github.io/wisp/MCP_USAGE.html">Docs</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost btn-sm" href="https://github.com/williamkapke/kapture"><i data-lucide="github"></i> GitHub</a>
-      <a class="btn btn-primary btn-sm" href="https://to.kap.co/kapture-extension">Install</a>
+      <a class="btn btn-ghost btn-sm" href="https://github.com/imtaqin/wisp"><i data-lucide="github"></i> GitHub</a>
+      <a class="btn btn-primary btn-sm" href="https://to.kap.co/wisp-extension">Install</a>
     </div>
   </div>
 </header>
@@ -47,16 +47,16 @@
 <!-- ============================= HERO ============================= -->
 <section class="hero" data-screen-label="Hero">
   <div class="wrap">
-    <a class="badge reveal" href="https://williamkapke.github.io/kapture/MULTI_ASSISTANT_GUIDE.html">
+    <a class="badge reveal" href="https://imtaqin.github.io/wisp/MULTI_ASSISTANT_GUIDE.html">
       <span class="tag">NEW</span>
       Run multiple AI assistants at once
       <span class="arrow">→</span>
     </a>
     <h1 class="reveal" data-d="1">Let your AI <span class="grad">drive the browser.</span></h1>
-    <p class="sub reveal" data-d="2">Kapture is an open-source MCP server and Chrome DevTools extension that gives any AI assistant real, reliable control of your browser. No Selenium, no chromedrivers, no headless guesswork — just the tab you're already looking at.</p>
+    <p class="sub reveal" data-d="2">Wisp is an open-source MCP server and Chrome DevTools extension that gives any AI assistant real, reliable control of your browser. No Selenium, no chromedrivers, no headless guesswork — just the tab you're already looking at.</p>
     <div class="hero-cta reveal" data-d="3">
-      <a class="btn btn-primary" href="https://to.kap.co/kapture-extension"><i data-lucide="download"></i> Install Extension</a>
-      <a class="btn btn-ghost" href="https://github.com/williamkapke/kapture"><i data-lucide="github"></i> View on GitHub</a>
+      <a class="btn btn-primary" href="https://to.kap.co/wisp-extension"><i data-lucide="download"></i> Install Extension</a>
+      <a class="btn btn-ghost" href="https://github.com/imtaqin/wisp"><i data-lucide="github"></i> View on GitHub</a>
     </div>
     <div class="trust reveal" data-d="4">
       <span><i data-lucide="git-branch"></i> 100% Open Source</span>
@@ -68,10 +68,10 @@
       <div class="browser">
         <div class="browser-bar">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span class="url">chrome://devtools · Kapture panel</span>
+          <span class="url">chrome://devtools · Wisp panel</span>
           <span class="pill"><span class="live"></span> WebSocket connected</span>
         </div>
-        <img src="assets/images/ScreenshotWithExtensionPanel.webp" alt="Kapture DevTools panel showing command history, WebSocket status, and a screenshot preview alongside an AI chat automating a form.">
+        <img src="assets/images/ScreenshotWithExtensionPanel.webp" alt="Wisp DevTools panel showing command history, WebSocket status, and a screenshot preview alongside an AI chat automating a form.">
       </div>
     </div>
   </div>
@@ -215,33 +215,33 @@
       <div class="res-grid">
         <div class="res reveal" data-d="1">
           <div class="rh"><span class="ic"><i data-lucide="panels-top-left"></i></span><h3>Tab Management</h3></div>
-          <code>kapture://tabs</code>
-          <code>kapture://tab/{tabId}</code>
+          <code>wisp://tabs</code>
+          <code>wisp://tab/{tabId}</code>
           <p class="note">List all connected tabs, or get the full detail for a single one.</p>
         </div>
         <div class="res reveal" data-d="2">
           <div class="rh"><span class="ic"><i data-lucide="terminal"></i></span><h3>Console Logs</h3></div>
-          <code>kapture://tab/{tabId}/console</code>
+          <code>wisp://tab/{tabId}/console</code>
           <p class="note">Paginate with <b>?before={ts}&amp;limit={n}</b>, filter by <b>?level=</b>. Max 500 per page; returns a <b>nextCursor</b>.</p>
         </div>
         <div class="res reveal" data-d="3">
           <div class="rh"><span class="ic"><i data-lucide="camera"></i></span><h3>Screenshots</h3></div>
-          <code>kapture://tab/{tabId}/screenshot</code>
+          <code>wisp://tab/{tabId}/screenshot</code>
           <p class="note">Options: <b>?selector={css}</b>, <b>?scale=0.1–1.0</b>, <b>?format=webp|jpeg|png</b>.</p>
         </div>
         <div class="res reveal" data-d="4">
           <div class="rh"><span class="ic"><i data-lucide="target"></i></span><h3>Element Inspection</h3></div>
-          <code>kapture://tab/{tabId}/elementsFromPoint</code>
+          <code>wisp://tab/{tabId}/elementsFromPoint</code>
           <p class="note">Pass <b>?x=&amp;y=</b> to get the full element stack with selectors, bounds, and styles.</p>
         </div>
         <div class="res reveal" data-d="5">
           <div class="rh"><span class="ic"><i data-lucide="code-xml"></i></span><h3>DOM Access</h3></div>
-          <code>kapture://tab/{tabId}/dom</code>
+          <code>wisp://tab/{tabId}/dom</code>
           <p class="note">Returns <b>outerHTML</b> for the page or a single element via <b>?selector={css}</b>.</p>
         </div>
         <div class="res reveal" data-d="6">
           <div class="rh"><span class="ic"><i data-lucide="layout-list"></i></span><h3>Element Queries</h3></div>
-          <code>kapture://tab/{tabId}/elements</code>
+          <code>wisp://tab/{tabId}/elements</code>
           <p class="note">Query all matches with <b>?selector={css}&amp;visible={true|false|all}</b>.</p>
         </div>
       </div>
@@ -310,12 +310,12 @@
 </section>
 
 <!-- ============================= WHY ============================= -->
-<section class="divider" id="why" data-screen-label="Why Kapture">
+<section class="divider" id="why" data-screen-label="Why Wisp">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">Why Kapture</span>
+      <span class="eyebrow">Why Wisp</span>
       <h2>Browser automation, without the baggage.</h2>
-      <p>Existing tools work — until they don't. Kapture was built from the ground up to fix the things that make AI browser control brittle.</p>
+      <p>Existing tools work — until they don't. Wisp was built from the ground up to fix the things that make AI browser control brittle.</p>
     </div>
     <div class="compare">
       <div class="col bad reveal">
@@ -329,7 +329,7 @@
         <div class="row"><span class="mk"><i data-lucide="x"></i></span><span class="rt"><b>No way to debug</b><span>No easy way to test commands or watch what's happening.</span></span></div>
       </div>
       <div class="col good reveal" data-d="1">
-        <h3>Kapture</h3>
+        <h3>Wisp</h3>
         <div class="ch-sub">// the fix</div>
         <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Fully open, end to end</b><span>Every line is on GitHub. Nothing phones home.</span></span></div>
         <div class="row"><span class="mk"><i data-lucide="check"></i></span><span class="rt"><b>Many assistants, in parallel</b><span>Run multiple AI agents against your browser at once.</span></span></div>
@@ -348,11 +348,11 @@
     <div class="section-head reveal">
       <span class="eyebrow">How it works</span>
       <h2>A three-layer architecture, built for reliability.</h2>
-      <p>AI applications talk MCP to the Kapture server, which speaks WebSockets to the browser extension and its DevTools panel.</p>
+      <p>AI applications talk MCP to the Wisp server, which speaks WebSockets to the browser extension and its DevTools panel.</p>
     </div>
 
     <div class="arch reveal">
-      <img src="assets/images/HowKaptureWorks.webp" alt="Architecture diagram: AI applications connect over MCP to the Kapture MCP server, which connects over WebSockets to Chrome/Brave browser extensions and DevTools panels.">
+      <img src="assets/images/HowWispWorks.webp" alt="Architecture diagram: AI applications connect over MCP to the Wisp MCP server, which connects over WebSockets to Chrome/Brave browser extensions and DevTools panels.">
     </div>
 
     <div class="points">
@@ -366,7 +366,7 @@
       <div class="reveal">
         <span class="tag">Test client included</span>
         <h3>Poke at the MCP server like an AI would.</h3>
-        <p>Kapture ships with an Electron test app that connects to the MCP server and lets you fire commands by hand — perfect for debugging, development, and understanding how agents will drive your setup.</p>
+        <p>Wisp ships with an Electron test app that connects to the MCP server and lets you fire commands by hand — perfect for debugging, development, and understanding how agents will drive your setup.</p>
         <ul>
           <li><i data-lucide="check-circle-2"></i> Test every MCP tool interactively</li>
           <li><i data-lucide="check-circle-2"></i> Real-time console output</li>
@@ -378,9 +378,9 @@
         <div class="browser">
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="url">Kapture MCP Test Client</span>
+            <span class="url">Wisp MCP Test Client</span>
           </div>
-          <img src="assets/images/test-app-screenshot.webp" alt="The Kapture MCP test client showing an interactive tool-testing interface.">
+          <img src="assets/images/test-app-screenshot.webp" alt="The Wisp MCP test client showing an interactive tool-testing interface.">
         </div>
       </div>
     </div>
@@ -394,8 +394,8 @@
       <h2>Ready to automate?</h2>
       <p>Give your AI the power to browse the web — in the tab you're already using.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="https://to.kap.co/kapture-extension"><i data-lucide="download"></i> Install Kapture</a>
-        <a class="btn btn-ghost" href="https://williamkapke.github.io/kapture/MCP_USAGE.html"><i data-lucide="book-open"></i> Read the Docs</a>
+        <a class="btn btn-primary" href="https://to.kap.co/wisp-extension"><i data-lucide="download"></i> Install Wisp</a>
+        <a class="btn btn-ghost" href="https://imtaqin.github.io/wisp/MCP_USAGE.html"><i data-lucide="book-open"></i> Read the Docs</a>
       </div>
     </div>
   </div>
@@ -407,16 +407,16 @@
 <footer class="divider">
   <div class="wrap">
     <div class="foot">
-      <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span> Kapture</a>
+      <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span> Wisp</a>
       <div class="foot-links">
-        <a href="https://github.com/williamkapke/kapture"><i data-lucide="github" style="width:15px;height:15px;vertical-align:-2px"></i> GitHub</a>
-        <a href="https://williamkapke.github.io/kapture/MCP_USAGE.html">Documentation</a>
-        <a href="https://github.com/williamkapke/kapture/issues">Issues</a>
-        <a href="https://github.com/williamkapke/kapture#contributing">Contribute</a>
-        <a href="https://williamkapke.github.io/kapture/privacy.html">Privacy</a>
+        <a href="https://github.com/imtaqin/wisp"><i data-lucide="github" style="width:15px;height:15px;vertical-align:-2px"></i> GitHub</a>
+        <a href="https://imtaqin.github.io/wisp/MCP_USAGE.html">Documentation</a>
+        <a href="https://github.com/imtaqin/wisp/issues">Issues</a>
+        <a href="https://github.com/imtaqin/wisp#contributing">Contribute</a>
+        <a href="https://imtaqin.github.io/wisp/privacy.html">Privacy</a>
       </div>
     </div>
-    <p class="foot-note">Kapture is an independent, open-source project focused on reliable browser automation for AI applications.</p>
+    <p class="foot-note">Wisp is an independent, open-source project focused on reliable browser automation for AI applications.</p>
   </div>
 </footer>
 

@@ -1,7 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { WebSocket } from 'ws';
-import { KAPTURE_EXTENSION_ID } from './origin-policy.js';
+import { WISP_EXTENSION_ID } from './origin-policy.js';
 
 // Integration tests for the control-plane security wiring in index.ts: the HTTP
 // handler and the WebSocket upgrade gate, exercised over a real socket. The
@@ -12,13 +12,13 @@ import { KAPTURE_EXTENSION_ID } from './origin-policy.js';
 // A free, non-default port so the test never collides with a running server.
 // Must be set before importing index.ts, which reads it at module load.
 const PORT = 61999;
-process.env.KAPTURE_PORT = String(PORT);
+process.env.WISP_PORT = String(PORT);
 
 const BASE = `http://127.0.0.1:${PORT}`;
 const WS_BASE = `ws://127.0.0.1:${PORT}`;
-const EXT = `chrome-extension://${KAPTURE_EXTENSION_ID}`;                 // the Kapture extension
+const EXT = `chrome-extension://${WISP_EXTENSION_ID}`;                 // the Wisp extension
 const OTHER_EXT = 'chrome-extension://abcdefghijklmnopabcdefghijklmnop'; // another extension
-const GOOD = 'https://williamkapke.github.io';                          // allow-listed
+const GOOD = 'https://imtaqin.github.io';                          // allow-listed
 const EVIL = 'https://evil.example';
 
 let startServer: () => Promise<void>;

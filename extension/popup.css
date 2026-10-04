@@ -1,0 +1,151 @@
+/* Wisp popup - dark, compact, violet. Shares its visual language with the
+   in-page control overlay (overlay.js). */
+
+:root {
+  --bg: #121010;
+  --panel: #1d1917;
+  --panel-2: #272220;
+  --line: rgba(252, 211, 77, .16);
+  --text: #f5efe6;
+  --muted: #a79e92;
+  --amber: #f59e0b;
+  --amber-soft: #fcd34d;
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #fb7185;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 304px;
+  margin: 0;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(245, 158, 11, .18), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font: 400 13px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- header -------------------------------------------------------- */
+.head { display: flex; align-items: center; gap: 10px; }
+.logo { width: 30px; height: 34px; flex-shrink: 0; filter: drop-shadow(0 3px 10px rgba(245, 158, 11, .5)); }
+.head-text { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.head h1 { margin: 0; font-size: 15px; font-weight: 650; letter-spacing: .2px; }
+.version { font-size: 10.5px; color: var(--muted); }
+
+.server {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 9px; border-radius: 999px;
+  background: var(--panel); border: 1px solid var(--line);
+  font-size: 10.5px; color: var(--muted);
+}
+.server-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+.server.online .server-dot { background: var(--green); box-shadow: 0 0 8px rgba(52, 211, 153, .8); }
+.server.online { color: var(--green); }
+.server.offline .server-dot { background: var(--red); }
+.server.offline { color: var(--red); }
+
+/* --- connection card ------------------------------------------------ */
+.card {
+  padding: 13px;
+  border-radius: 14px;
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(12, 8, 4, .55);
+}
+.card.connected { border-color: rgba(52, 211, 153, .45); }
+.card.retrying { border-color: rgba(251, 191, 36, .45); }
+
+.card-row { display: flex; align-items: center; gap: 10px; }
+.state { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.state-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  background: var(--muted);
+}
+.card.connected .state-dot { background: var(--green); box-shadow: 0 0 10px rgba(52, 211, 153, .9); }
+.card.retrying .state-dot { background: var(--amber); animation: pulse 1.1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35 } }
+
+.state-text { font-size: 13.5px; font-weight: 600; }
+.state-sub {
+  font-size: 11px; color: var(--muted);
+  max-width: 182px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* --- switches ------------------------------------------------------- */
+.switch { position: relative; width: 42px; height: 23px; flex-shrink: 0; display: inline-block; }
+.switch.sm { width: 34px; height: 19px; }
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 2; }
+.track {
+  position: absolute; inset: 0; border-radius: 999px;
+  background: #3a322b; border: 1px solid var(--line);
+  transition: background .18s ease;
+}
+.track::before {
+  content: ""; position: absolute; top: 50%; left: 3px;
+  width: 17px; height: 17px; border-radius: 50%; background: #e4dcd0;
+  transform: translateY(-50%); transition: transform .18s cubic-bezier(.3, .9, .4, 1.3), background .18s ease;
+}
+.switch.sm .track::before { width: 13px; height: 13px; }
+.switch input:checked + .track { background: var(--amber); border-color: transparent; }
+.switch input:checked + .track::before { transform: translate(19px, -50%); background: #fff; }
+.switch.sm input:checked + .track::before { transform: translate(15px, -50%); }
+.switch input:checked + .track.danger { background: var(--red); }
+.switch input:disabled + .track { opacity: .4; }
+.switch input:disabled { cursor: not-allowed; }
+.switch input:focus-visible + .track { outline: 2px solid var(--amber-soft); outline-offset: 2px; }
+
+/* --- quick actions -------------------------------------------------- */
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.action {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 10px; border-radius: 11px;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line);
+  font: 500 11.5px/1 inherit; text-align: left; cursor: pointer;
+  transition: background .15s ease, transform .1s ease, border-color .15s ease;
+}
+.action:hover { background: var(--panel-2); border-color: rgba(252, 211, 77, .4); }
+.action:active { transform: scale(.97); }
+.action:disabled { opacity: .45; cursor: not-allowed; }
+.action svg {
+  width: 15px; height: 15px; flex-shrink: 0;
+  fill: none; stroke: var(--amber-soft); stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* --- settings ------------------------------------------------------- */
+.settings {
+  border-radius: 14px; overflow: hidden;
+  background: var(--panel); border: 1px solid var(--line);
+}
+.setting {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; cursor: pointer;
+  border-top: 1px solid rgba(252, 211, 77, .1);
+}
+.setting:first-child { border-top: 0; }
+.setting:hover { background: var(--panel-2); }
+.setting-text { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.setting-text span { font-size: 12.5px; font-weight: 500; }
+.setting-text small { font-size: 10.5px; color: var(--muted); }
+.danger-row .setting-text span { color: #fecdd3; }
+.setting.disabled { opacity: .5; cursor: not-allowed; }
+
+/* --- footer --------------------------------------------------------- */
+.foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 10.5px; color: var(--muted); padding: 0 2px;
+}
+.toast { color: var(--amber-soft); opacity: 0; transition: opacity .2s ease; }
+.toast.show { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

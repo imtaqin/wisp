@@ -1,21 +1,21 @@
 {
   "dxt_version": "0.1",
-  "name": "kapture",
-  "display_name": "Kapture Browser Automation",
+  "name": "wisp",
+  "display_name": "Wisp Browser Automation",
   "version": "2.6.1",
   "description": "Control web browsers through the Model Context Protocol using Chrome DevTools",
-  "long_description": "Kapture is a powerful browser automation tool that enables AI assistants like Claude to control web browsers through a Chrome DevTools extension. It provides a seamless bridge between MCP clients and browser automation, allowing you to navigate pages, interact with elements, capture screenshots, and extract information from websites.\n\nKey features:\n- Navigate and control browser tabs\n- Click, hover, and interact with page elements\n- Fill forms and input fields\n- Capture screenshots of pages or specific elements\n- Extract DOM content and query elements\n- Monitor console logs in real-time\n- Support for multiple simultaneous browser connections",
+  "long_description": "Wisp is a powerful browser automation tool that enables AI assistants like Claude to control web browsers through a Chrome DevTools extension. It provides a seamless bridge between MCP clients and browser automation, allowing you to navigate pages, interact with elements, capture screenshots, and extract information from websites.\n\nKey features:\n- Navigate and control browser tabs\n- Click, hover, and interact with page elements\n- Fill forms and input fields\n- Capture screenshots of pages or specific elements\n- Extract DOM content and query elements\n- Monitor console logs in real-time\n- Support for multiple simultaneous browser connections",
   "author": {
-    "name": "William Kapke",
-    "url": "https://github.com/williamkapke"
+    "name": "imtaqin",
+    "url": "https://github.com/imtaqin"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/williamkapke/kapture"
+    "url": "https://github.com/imtaqin/wisp"
   },
-  "homepage": "https://williamkapke.github.io/kapture/",
-  "documentation": "https://williamkapke.github.io/kapture/MCP_USAGE.html",
-  "support": "https://github.com/williamkapke/kapture/issues",
+  "homepage": "https://imtaqin.github.io/wisp/",
+  "documentation": "https://imtaqin.github.io/wisp/MCP_USAGE.html",
+  "support": "https://github.com/imtaqin/wisp/issues",
   "icon": "icon.png",
   "keywords": [
     "browser",
@@ -163,7 +163,7 @@
     },
     {
       "name": "new_tab",
-      "description": "Opens a new browser tab with the Kapture MCP usage documentation page"
+      "description": "Opens a new browser tab with the Wisp MCP usage documentation page"
     },
     {
       "name": "close",

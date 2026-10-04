@@ -92,7 +92,7 @@ export class BrowserCommandHandler {
           success: false,
           error: {
             code: 'EXTENSION_OUTDATED',
-            message: 'The connected Kapture extension does not support watch_console. Update the extension to the latest version.'
+            message: 'The connected Wisp extension does not support watch_console. Update the extension to the latest version.'
           }
         };
       }
@@ -115,7 +115,7 @@ export class BrowserCommandHandler {
           success: false,
           error: {
             code: 'EVAL_NOT_ALLOWED',
-            message: 'JavaScript execution is not enabled for this tab. The user must turn on "Allow JavaScript Execution" in the Kapture extension popup or DevTools panel.'
+            message: 'JavaScript execution is not enabled for this tab. The user must turn on "Allow JavaScript Execution" in the Wisp extension popup or DevTools panel.'
           }
         };
       }
@@ -140,7 +140,7 @@ export class BrowserCommandHandler {
           success: false,
           error: {
             code: 'EXTENSION_OUTDATED',
-            message: 'The connected Kapture extension does not support network monitoring. Update the extension to the latest version.'
+            message: 'The connected Wisp extension does not support network monitoring. Update the extension to the latest version.'
           }
         };
       }
@@ -161,7 +161,7 @@ export class BrowserCommandHandler {
           success: false,
           error: {
             code: 'EXTENSION_OUTDATED',
-            message: `The connected Kapture extension does not support coordinate ${toolName}s. Update the extension to the latest version, or target the element with a selector/xpath instead.`
+            message: `The connected Wisp extension does not support coordinate ${toolName}s. Update the extension to the latest version, or target the element with a selector/xpath instead.`
           }
         };
       }
@@ -175,7 +175,7 @@ export class BrowserCommandHandler {
           success: false,
           error: {
             code: 'EXTENSION_OUTDATED',
-            message: 'The connected Kapture extension does not support the dialog tool. Update the extension to the latest version.'
+            message: 'The connected Wisp extension does not support the dialog tool. Update the extension to the latest version.'
           }
         };
       }
@@ -281,7 +281,7 @@ export class BrowserCommandHandler {
   async newTab(browser?: string): Promise<any> {
     // Generate a unique session ID for this tab
     const sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-    const targetUrl = `https://williamkapke.github.io/kapture/how-to.html#session=${sessionId}`;
+    const targetUrl = `https://imtaqin.github.io/wisp/how-to.html#session=${sessionId}`;
 
     // Open the browser with the URL using system command
     const platform = process.platform;
@@ -374,7 +374,7 @@ export class BrowserCommandHandler {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    throw new Error('New tab failed to connect within timeout. Make sure the Kapture extension is installed.');
+    throw new Error('New tab failed to connect within timeout. Make sure the Wisp extension is installed.');
   }
 
   // ========================================================================

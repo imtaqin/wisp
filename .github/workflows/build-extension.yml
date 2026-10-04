@@ -32,19 +32,19 @@ jobs:
     - name: Create zip file
       run: |
         cd build
-        zip -r ../kapture-extension.zip .
+        zip -r ../wisp-extension.zip .
         cd ..
     
     - name: Upload extension artifact
       uses: actions/upload-artifact@v4
       with:
-        name: kapture-extension-${{ github.sha }}
-        path: kapture-extension.zip
+        name: wisp-extension-${{ github.sha }}
+        path: wisp-extension.zip
         retention-days: 30
     
     - name: Upload extension artifact (latest)
       uses: actions/upload-artifact@v4
       with:
-        name: kapture-extension-latest
-        path: kapture-extension.zip
+        name: wisp-extension-latest
+        path: wisp-extension.zip
         retention-days: 7

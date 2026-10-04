@@ -2,7 +2,7 @@
 baseResources:
   tabs:
     name: Connected Browser Tabs
-    description: List of all browser tabs connected to the Kapture server
+    description: List of all browser tabs connected to the Wisp server
 
 # Dynamic resources created for each connected tab
 # {tabId} and {tabTitle} will be replaced with actual values

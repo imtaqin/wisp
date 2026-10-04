@@ -1,11 +1,11 @@
 {
-  "name": "kapture-mcp",
-  "version": "2.6.1",
-  "description": "MCP server for Kapture browser automation",
+  "name": "wisp-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Wisp browser automation",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "kapture-mcp": "dist/cli.js"
+    "wisp-mcp": "dist/cli.js"
   },
   "files": [
     "dist/**/*",
@@ -17,14 +17,14 @@
     "mcp",
     "browser-automation",
     "chrome-extension",
-    "kapture",
+    "wisp",
     "devtools"
   ],
-  "author": "William Kapke",
+  "author": "imtaqin",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/williamkapke/kapture.git",
+    "url": "git+https://github.com/imtaqin/wisp.git",
     "directory": "server"
   },
   "scripts": {

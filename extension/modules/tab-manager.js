@@ -26,7 +26,12 @@ export class TabManager {
     this.tabs = new Map(); // tabId -> TabState
     this.listeners = new Set(); // State change listeners
     this.keepaliveMs = 30000; // configurable via the 'keepaliveSeconds' setting
+    // "Allow JavaScript Execution" granted on every connect (the 'evalByDefault'
+    // setting, default on). Still revoked on disconnect, then re-granted when
+    // the tab reconnects.
+    this.evalByDefault = true;
     this._initKeepaliveSetting();
+    this.evalSettingReady = this._initEvalSetting();
   }
 
   // Load the configurable keepalive interval and react to panel changes.
@@ -40,6 +45,18 @@ export class TabManager {
       if (area !== 'local' || !changes.keepaliveSeconds) return;
       this.keepaliveMs = this._keepaliveMsFrom(changes.keepaliveSeconds.newValue);
       this._restartKeepalives();
+    });
+  }
+
+  async _initEvalSetting() {
+    try {
+      const { evalByDefault } = await chrome.storage.local.get('evalByDefault');
+      if (typeof evalByDefault === 'boolean') this.evalByDefault = evalByDefault;
+    } catch (e) { /* storage unavailable -> keep default */ }
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'local' || !changes.evalByDefault) return;
+      this.evalByDefault = changes.evalByDefault.newValue !== false;
     });
   }
 
@@ -217,6 +234,18 @@ export class TabManager {
 
       this.sendMessage(tabState.tabId, registerMessage);
 
+      // Grant eval up front when the setting is on, so a reconnect doesn't
+      // silently drop the permission the user expects to be there. Waits for
+      // the stored setting so a connect right after the worker starts doesn't
+      // grant it on the default.
+      this.evalSettingReady.then(() => {
+        if (!this.evalByDefault) return;
+        if (!tabState.websocket || tabState.websocket.readyState !== WebSocket.OPEN) return;
+        tabState.evalAllowed = true;
+        this.sendMessage(tabState.tabId, { type: 'eval-permission', allowed: true });
+        this.notifyListeners(tabState.tabId, 'stateChanged', tabState);
+      });
+
       // Set up keepalive ping (interval configurable via panel setting, default 30s)
       tabState.keepaliveInterval = this._startKeepalive(tabState);
     };
@@ -350,11 +379,18 @@ export class TabManager {
       // `success: true` means we didn't throw an error. TODO: rename or remove it
       const response = {id, type: 'response', success: true, result};
       this.sendMessage(tabState.tabId, response);
+      this._reportOutcome(tabState.tabId, !result?.error);
     }
     catch (error) {
       const errorResponse = { id, type: 'response', success: false,  error: { message: error.message, code: 'COMMAND_FAILED' }};
       this.sendMessage(tabState.tabId, errorResponse);
+      this._reportOutcome(tabState.tabId, false);
     }
+  }
+
+  // Let the page's control overlay react to how the command went
+  _reportOutcome(tabId, ok) {
+    chrome.tabs.sendMessage(tabId, { command: '_outcome', params: { ok } }).catch(() => {});
   }
 
   // Message sending

@@ -6,9 +6,9 @@ import { dirname, join } from 'path';
 import { createRequire } from 'module';
 import { openSync } from 'fs';
 import { tmpdir } from 'os';
-import { ensureServer } from './bridge-lib.js';
+import { ensureServer, canSpawnDetachedServer } from './bridge-lib.js';
 
-process.title = 'Kapture MCP Bridge';
+process.title = 'Wisp MCP Bridge';
 
 const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +21,7 @@ const PORT = 61822;
 
 // Synthetic JSON-RPC id for the replayed initialize request. Client ids are
 // numbers (or client-chosen strings), so this never collides.
-const REPLAY_INITIALIZE_ID = 'kapture-bridge-replay-initialize';
+const REPLAY_INITIALIZE_ID = 'wisp-bridge-replay-initialize';
 
 /**
  * mcp2websocket bridge that replays the MCP initialize handshake when the
@@ -69,7 +69,7 @@ class ReplayingMCPWebSocketBridge extends MCPWebSocketBridge {
   }
 }
 const serverPath = join(__dirname, 'index.js');
-const logPath = join(tmpdir(), 'kapture-server.log');
+const logPath = join(tmpdir(), 'wisp-server.log');
 
 // Best-effort: spawn a standalone server as a detached child. Keeps the
 // shared-server model (multiple MCP clients, one server, same browser tabs)
@@ -89,7 +89,7 @@ function spawnDetachedServer() {
     env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },
   });
   serverProcess.on('error', (error) => {
-    console.error('Failed to spawn Kapture server:', error);
+    console.error('Failed to spawn Wisp server:', error);
   });
   serverProcess.unref();
 }
@@ -111,22 +111,21 @@ async function main() {
   // give up with exit(1). console.error (stderr) is safe; stdout is the MCP
   // channel.
   //
-  // Under Electron's bundled Node the detached child is skipped outright: it
-  // cannot survive there anyway, and the host's process monitor flags the
-  // spawned file and prompts the user about it on every session. Hosting
-  // in-process directly avoids both.
-  const isElectron = Boolean(process.versions.electron);
+  // Under a desktop host's bundled runtime the detached child is skipped
+  // outright: it cannot survive there anyway, and the host watches the spawned
+  // file and prompts the user about it on every launch and view change
+  // (issues #15, #24). Hosting in-process directly avoids both.
   const outcome = await ensureServer({
     host: HOST,
     port: PORT,
-    spawnDetached: isElectron ? undefined : spawnDetachedServer,
+    spawnDetached: canSpawnDetachedServer() ? spawnDetachedServer : undefined,
     startInProcess: startServerInProcess,
     log: (message) => console.error(message),
   });
 
   if (outcome === 'failed') {
     console.error(
-      `Kapture server never bound ${HOST}:${PORT}. See ${logPath} for details.`
+      `Wisp server never bound ${HOST}:${PORT}. See ${logPath} for details.`
     );
     process.exit(1);
   }

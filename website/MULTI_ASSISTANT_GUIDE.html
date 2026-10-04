@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Running Multiple AI Assistants with Kapture</title>
+    <title>Running Multiple AI Assistants with Wisp</title>
     <style>
         * {
             margin: 0;
@@ -168,18 +168,18 @@
     <div class="container">
         <a href="index.html" class="back-link">← Back to Documentation</a>
 
-        <h1>Running Multiple AI Assistants with Kapture</h1>
+        <h1>Running Multiple AI Assistants with Wisp</h1>
 
-        <p>Kapture enables multiple AI assistants to control browser tabs simultaneously through a single server instance. This guide explains how to set up and manage multi-assistant workflows effectively.</p>
+        <p>Wisp enables multiple AI assistants to control browser tabs simultaneously through a single server instance. This guide explains how to set up and manage multi-assistant workflows effectively.</p>
 
         <h2>Understanding the Architecture</h2>
 
-        <p>Kapture uses a hybrid architecture that supports both stdio and WebSocket connections:</p>
+        <p>Wisp uses a hybrid architecture that supports both stdio and WebSocket connections:</p>
 
         <div class="mermaid">
 graph LR
     CD[Claude Desktop] -->|stdio| B[bridge]
-    B -->|WebSocket| KS[Kapture Server]
+    B -->|WebSocket| KS[Wisp Server]
     OC[Other MCP Clients] -->|WebSocket| KS
     KS --> CE[Chrome Extension]
     CE --> BT[Browser Tabs]
@@ -187,7 +187,7 @@ graph LR
 
         <h3>Key Concepts</h3>
         <ol>
-            <li><strong>Single Server Instance</strong>: Only one Kapture server runs at a time on port 61822</li>
+            <li><strong>Single Server Instance</strong>: Only one Wisp server runs at a time on port 61822</li>
             <li><strong>Bridge Mode</strong>: Translates between stdio (used by Claude Desktop) and WebSocket</li>
             <li><strong>Direct WebSocket</strong>: Other MCP clients connect directly via WebSocket</li>
             <li><strong>Shared Browser Access</strong>: All connected clients can control any connected browser tab</li>
@@ -197,7 +197,7 @@ graph LR
 
         <h3>Step 1: Install the Chrome Extension</h3>
         <ol>
-            <li>Download the Kapture extension from the <a href="https://github.com/williamkapke/kapture/releases">releases page</a></li>
+            <li>Download the Wisp extension from the <a href="https://github.com/imtaqin/wisp/releases">releases page</a></li>
             <li>Open Chrome and navigate to <code>chrome://extensions/</code></li>
             <li>Enable "Developer mode"</li>
             <li>Click "Load unpacked" and select the extension folder</li>
@@ -215,12 +215,12 @@ graph LR
                     <li><strong>Linux</strong>: <code>~/.config/Claude/claude_desktop_config.json</code></li>
                 </ul>
             </li>
-            <li>Add the Kapture configuration:
+            <li>Add the Wisp configuration:
                 <pre><code>{
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }</code></pre>
@@ -236,7 +236,7 @@ graph LR
         <p>Add to your VS Code settings:</p>
         <pre><code>{
   "cline.mcpServers": {
-    "kapture": {
+    "wisp": {
       "transport": "websocket",
       "url": "ws://localhost:61822/mcp"
     }
@@ -251,7 +251,7 @@ graph LR
         <ol>
             <li>Open Chrome/Brave and navigate to any website</li>
             <li>Open DevTools (F12 or Cmd+Option+I)</li>
-            <li>Click on the "Kapture" panel</li>
+            <li>Click on the "Wisp" panel</li>
             <li>The extension automatically connects to the server</li>
         </ol>
 
@@ -276,7 +276,7 @@ graph LR
 }</code></pre>
 
         <h3>Monitor in DevTools</h3>
-        <p>The Kapture panel shows:</p>
+        <p>The Wisp panel shows:</p>
         <ul>
             <li>Server connection status</li>
             <li>Command history</li>
@@ -326,7 +326,7 @@ graph LR
         <h3>Server Lifecycle</h3>
         <ol>
             <li><strong>Automatic Start</strong>: When Claude Desktop launches with the bridge config</li>
-            <li><strong>Smart Detection</strong>: If you run <code>npx kapture-mcp</code> manually and a server is already running, it will show the existing server info and exit</li>
+            <li><strong>Smart Detection</strong>: If you run <code>npx wisp-mcp</code> manually and a server is already running, it will show the existing server info and exit</li>
             <li><strong>Graceful Shutdown</strong>: Server stops when all clients disconnect</li>
         </ol>
 
@@ -360,7 +360,7 @@ graph LR
 
         <h3>Commands Not Working</h3>
         <ol>
-            <li>Check the Kapture panel is active in DevTools</li>
+            <li>Check the Wisp panel is active in DevTools</li>
             <li>Verify the tab shows as connected (green status)</li>
             <li>Look for errors in the DevTools console</li>
         </ol>
@@ -418,8 +418,8 @@ await transport.connect();</code></pre>
         <h3>Monitoring All Activity</h3>
         <p>Subscribe to notifications:</p>
         <ul>
-            <li><code>kapture/tabs_changed</code> - Tab connections/disconnections</li>
-            <li><code>kapture/tab_disconnected</code> - A specific tab disconnected</li>
+            <li><code>wisp/tabs_changed</code> - Tab connections/disconnections</li>
+            <li><code>wisp/tab_disconnected</code> - A specific tab disconnected</li>
         </ul>
 
         <h3>Programmatic Control</h3>
@@ -435,7 +435,7 @@ curl http://localhost:61822/tab/{tabId}/screenshot/view > screenshot.png</code><
 
         <h2>Summary</h2>
 
-        <p>Running multiple AI assistants with Kapture enables powerful automation workflows. The key is understanding that:</p>
+        <p>Running multiple AI assistants with Wisp enables powerful automation workflows. The key is understanding that:</p>
 
         <ol>
             <li>Claude Desktop manages the server lifecycle via the bridge command</li>

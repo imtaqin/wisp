@@ -1,5 +1,5 @@
 // page-helpers.js - Content script that provides helper functions
-let kaptureIdCounter = 0;
+let wispIdCounter = 0;
 
 function getUniqueSelector(element) {
   if (!element || !(element instanceof Element)) return null;
@@ -18,7 +18,7 @@ function getUniqueSelector(element) {
     }
   }
 
-  const uniqueId = 'kapture-' + (++kaptureIdCounter)
+  const uniqueId = 'wisp-' + (++wispIdCounter)
 
   if (!element.id) {
     element.id = uniqueId;
@@ -322,17 +322,17 @@ const helpers = {
   },
   _connectionStateChanged: ({ status, connected }) => {
     // Remove existing connection classes
-    document.body.classList.remove('kapture-connected', 'kapture-connecting');
+    document.body.classList.remove('wisp-connected', 'wisp-connecting');
     
     // Add appropriate class based on status
     if (status === 'connected') {
-      document.body.classList.add('kapture-connected');
+      document.body.classList.add('wisp-connected');
     } else if (status === 'retrying') {
-      document.body.classList.add('kapture-connecting');
+      document.body.classList.add('wisp-connecting');
     }
     // No class for disconnected state
 
-    kaptureOverlay.setActive(status === 'connected');
+    wispOverlay.setActive(status === 'connected');
     return { success: true };
   },
 
@@ -585,7 +585,7 @@ const helpers = {
   },
   _cursor: ({show}) => {
     try {
-      const position = kaptureOverlay.showCursor(show !== false);
+      const position = wispOverlay.showCursor(show !== false);
       return respondWith({ visible: show !== false, position });
     } catch (e) {
       return respondWithError('CURSOR_ERROR', e.message);
@@ -598,25 +598,39 @@ const helpers = {
 
     try {
       // Glide via CSS transition when a duration is given; snap otherwise
-      kaptureOverlay.moveCursor(x, y, duration);
+      wispOverlay.moveCursor(x, y, duration);
       return respondWith({ moved: true, x, y });
     } catch (e) {
       return respondWithError('MOVE_MOUSE_SVG_ERROR', e.message);
     }
   },
   _clickEffect: ({x, y}) => {
-    kaptureOverlay.clickEffect(x, y);
+    wispOverlay.clickEffect(x, y);
     return { success: true };
   },
   _activity: ({label}) => {
-    kaptureOverlay.activity(label);
+    wispOverlay.activity(label);
     return { success: true };
   },
   _capturing: ({on}) => {
-    kaptureOverlay.setCapturing(on);
+    wispOverlay.setCapturing(on);
+    return { success: true };
+  },
+  _mascot: ({show}) => {
+    wispOverlay.setMascot(show);
+    return { success: true };
+  },
+  // Called by the background script when a command finishes: Kap reacts
+  _outcome: ({ok}) => {
+    wispOverlay.outcome(ok);
     return { success: true };
   }
 };
+
+// The mascot is opt-out (popup setting), applied before anything shows
+chrome.storage.local.get('showMascot').then(({ showMascot }) => {
+  wispOverlay.setMascot(showMascot !== false);
+}).catch(() => {});
 
 // Mouse position tracking with throttling
 let lastMouseSendTime = 0;

@@ -5,15 +5,15 @@
 // so its chrome-extension:// origin is accepted only there - not on HTTP, not on /mcp.
 
 const DEFAULT_ALLOWED_ORIGINS = [
-  'https://williamkapke.github.io', // hosted dashboard (clients.html)
+  'https://imtaqin.github.io', // hosted dashboard (clients.html)
   'http://127.0.0.1:61822',         // server-hosted test.html (same-origin)
   'http://localhost:61822',
 ];
 
 // Extra origins for self-hosted dashboards / local website development, e.g.
-// KAPTURE_ALLOWED_ORIGINS="http://localhost:8080,https://my.dashboard"
+// WISP_ALLOWED_ORIGINS="http://localhost:8080,https://my.dashboard"
 export function parseAllowedOrigins(
-  env: string | undefined = process.env.KAPTURE_ALLOWED_ORIGINS,
+  env: string | undefined = process.env.WISP_ALLOWED_ORIGINS,
 ): Set<string> {
   return new Set([
     ...DEFAULT_ALLOWED_ORIGINS,
@@ -26,12 +26,12 @@ export function parseAllowedOrigins(
 
 const ALLOWED_ORIGINS = parseAllowedOrigins();
 
-// Only the published Kapture extension. Unpacked dev builds get this same ID via
+// Only the Wisp extension built from this repo. Unpacked dev builds get this same ID via
 // the "key" field in extension/manifest.json, so the pin holds in dev and prod.
-export const KAPTURE_EXTENSION_ID = 'ejfnegenodbdcodemkibocefmajjjjbn';
+export const WISP_EXTENSION_ID = 'bdpkeincfcmdokhpglgdocbpfgnjojoi';
 
 const isExtensionOrigin = (origin: string | string[] | undefined): boolean =>
-  origin === `chrome-extension://${KAPTURE_EXTENSION_ID}`;
+  origin === `chrome-extension://${WISP_EXTENSION_ID}`;
 
 // HTTP + general gate. No chrome-extension branch: the extension never makes
 // HTTP calls, so an extension Origin is not accepted here (nor on /mcp).
@@ -62,11 +62,11 @@ export function isWebSocketOriginAllowed(
 // these exact, browser-set origins, so a no-Origin local caller (curl/script)
 // can't reach them. Reads allow the Pages origin (its localhost probe); writes
 // are localhost-only (configuring happens on the local copy after the redirect).
-// Fixed sets - intentionally NOT extended by KAPTURE_ALLOWED_ORIGINS.
+// Fixed sets - intentionally NOT extended by WISP_ALLOWED_ORIGINS.
 const ASSISTANTS_READ_ORIGINS = new Set([
   'http://localhost:61822',
   'http://127.0.0.1:61822',
-  'https://williamkapke.github.io',
+  'https://imtaqin.github.io',
 ]);
 const ASSISTANTS_WRITE_ORIGINS = new Set([
   'http://localhost:61822',

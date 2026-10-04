@@ -7,7 +7,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { WebSocketClientTransport } from '@modelcontextprotocol/sdk/client/websocket.js';
 import { WebSocket } from 'ws';
 
-process.title = 'Kapture Setup';
+process.title = 'Wisp Setup';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,7 +32,7 @@ async function setup() {
   globalThis.WebSocket = WebSocket;
 
   const client = new Client({
-    name: 'kapture-setup',
+    name: 'wisp-setup',
     version: '1.0.0'
   }, {
     capabilities: {}
@@ -68,8 +68,8 @@ async function setup() {
               const url = tab.url || '';
               const local_welcome_url = url.includes(localhost_welcome);
 
-              //https://williamkapke.github.io/kapture/welcome
-              const public_welcome_url = url.includes('/kapture/welcome');
+              //https://imtaqin.github.io/wisp/welcome
+              const public_welcome_url = url.includes('/wisp/welcome');
               if (local_welcome_url || public_welcome_url) {
                 console.log('Found welcome tab:', tab.tabId);
                 welcomeTabId = tab.tabId;

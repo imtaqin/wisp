@@ -40,7 +40,7 @@ if (!command || command === 'server') {
   });
 } else {
   console.error(`Unknown command: ${command}`);
-  console.error('Usage: kapture-mcp [command]');
+  console.error('Usage: wisp-mcp [command]');
   console.error('Commands:');
   console.error('  server  Run the MCP server (default)');
   console.error('  bridge  Run the stdio-to-websocket bridge');

@@ -1,5 +1,5 @@
 /* ===========================================================
-   Kapture — interactivity (vanilla)
+   Wisp — interactivity (vanilla)
    =========================================================== */
 
 /* ---- 1. inject the themed logo glyph into every .logo slot ---- */

@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 
 // Set app name before anything else
-app.setName('Kapture Test Client');
+app.setName('Wisp Test Client');
 
 const path = require('path');
 const WebSocket = require('ws');
@@ -20,7 +20,7 @@ function parseArgs() {
     if (args[i] === '--dev') {
       dev = true;
     } else if (args[i] === '--help' || args[i] === '-h') {
-      console.log('Kapture Test App (WebSocket Mode)');
+      console.log('Wisp Test App (WebSocket Mode)');
       console.log('Usage: npm start -- [options]');
       console.log('');
       console.log('Options:');
@@ -40,7 +40,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    title: 'Kapture Test Client',
+    title: 'Wisp Test Client',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -194,7 +194,7 @@ async function initializeMCPConnection() {
     protocolVersion: '2024-11-05',
     capabilities: {},
     clientInfo: {
-      name: 'kapture-test-app-websocket',
+      name: 'wisp-test-app-websocket',
       version: '1.0.0'
     }
   });

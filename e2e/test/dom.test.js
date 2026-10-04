@@ -32,7 +32,7 @@ describe('DOM Tool Tests', function() {
     expectValidTabInfo(resultData);
     expect(resultData).to.have.property('html').that.is.a('string');
     expect(resultData).to.have.property('selector').that.is.a('string');
-    expect(resultData.html).to.equal('<h1>Kapture Window Events Test</h1>');
+    expect(resultData.html).to.equal('<h1>Wisp Window Events Test</h1>');
   });
 
   it('should get DOM HTML using XPath', async function() {
@@ -46,7 +46,7 @@ describe('DOM Tool Tests', function() {
     expect(resultData).to.have.property('html').that.is.a('string');
     expect(resultData).to.have.property('xpath').that.equals('//h1');
     expect(resultData).to.not.have.property('selector');
-    expect(resultData.html).to.equal('<h1>Kapture Window Events Test</h1>');
+    expect(resultData.html).to.equal('<h1>Wisp Window Events Test</h1>');
   });
 
   it('should handle DOM element not found', async function() {

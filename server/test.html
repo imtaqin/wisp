@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kapture Window Events Test</title>
+    <title>Wisp Window Events Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -119,29 +119,29 @@
     </style>
 </head>
 <body>
-    <h1>Kapture Window Events Test</h1>
+    <h1>Wisp Window Events Test</h1>
 
     <script>
-        function connectKapture() {
+        function connectWisp() {
             console.log('Dispatching connect event...');
-            const event = new CustomEvent('kapture-message', {
+            const event = new CustomEvent('wisp-message', {
                 detail: { type: 'connect' }
             });
             window.dispatchEvent(event);
         }
 
-        function disconnectKapture() {
+        function disconnectWisp() {
             console.log('Dispatching disconnect event...');
-            const event = new CustomEvent('kapture-message', {
+            const event = new CustomEvent('wisp-message', {
                 detail: { type: 'disconnect' }
             });
             window.dispatchEvent(event);
         }
 
-        // Auto-connect when Kapture is loaded
-        window.addEventListener('kapture-loaded', () => {
-            console.log('Kapture loaded! Auto-connecting...');
-            connectKapture();
+        // Auto-connect when Wisp is loaded
+        window.addEventListener('wisp-loaded', () => {
+            console.log('Wisp loaded! Auto-connecting...');
+            connectWisp();
         });
 
         // Test button handler

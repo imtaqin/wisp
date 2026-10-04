@@ -23,7 +23,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Try multiple paths to find package.json
-let packageJson: any = { name: 'kapture-mcp', version: 'unknown' };
+let packageJson: any = { name: 'wisp-mcp', version: 'unknown' };
 const possiblePaths = [
   join(__dirname, '../../package.json'), // Development path
   join(__dirname, '../package.json'),    // Compiled distribution path
@@ -136,7 +136,7 @@ export class MCPServerManager {
         });
 
         await connection.server.notification({
-          method: 'kapture/tab_disconnected',
+          method: 'wisp/tab_disconnected',
           params: {
             tabId,
             timestamp: Date.now()
@@ -205,7 +205,7 @@ export class MCPServerManager {
 
     await this.notifyAllConnections(async (connection) => {
       await connection.server.notification({
-        method: 'kapture/tabs_changed',
+        method: 'wisp/tabs_changed',
         params: {
           tabs,
           timestamp: Date.now()

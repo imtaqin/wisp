@@ -3,7 +3,7 @@
 // A dialog freezes the renderer, so content-script commands and input
 // dispatches hang while one is open. Chrome only reports dialogs through
 // Page.javascriptDialogOpening on an attached debugger session - which
-// Kapture holds exactly when dialogs tend to appear: during the input
+// Wisp holds exactly when dialogs tend to appear: during the input
 // command that triggered one. When that happens we keep the session alive
 // past the command (an extra debugger ref) so Page.handleJavaScriptDialog
 // can answer it later, and tab-manager fails every other command fast with
@@ -130,7 +130,7 @@ export async function dialog({ tabId }, { accept, text } = {}) {
       success: false,
       error: {
         code: 'NO_DIALOG',
-        message: 'No JavaScript dialog is open on this tab (or it opened before Kapture could see it - if one is visible, ask the user to dismiss it).'
+        message: 'No JavaScript dialog is open on this tab (or it opened before Wisp could see it - if one is visible, ask the user to dismiss it).'
       }
     };
   }

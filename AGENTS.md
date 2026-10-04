@@ -1,10 +1,10 @@
-# Kapture
+# Wisp
 
-This document provides a high-level overview of the Kapture project, intended to be used as a reference for AI coding agents.
+This document provides a high-level overview of the Wisp project, intended to be used as a reference for AI coding agents.
 
 ## Project Goal
 
-Kapture is a Chrome Extension that enables browser automation through the Model Context Protocol (MCP). AI applications (Claude Desktop, Cline, etc.) connect to a local MCP server, which relays commands over WebSocket to the extension, which executes them in the browser (navigate, click, fill, screenshot, read DOM, read console logs, etc.).
+Wisp is a Chrome Extension that enables browser automation through the Model Context Protocol (MCP). AI applications (Claude Desktop, Cline, etc.) connect to a local MCP server, which relays commands over WebSocket to the extension, which executes them in the browser (navigate, click, fill, screenshot, read DOM, read console logs, etc.).
 
 DevTools does NOT need to be open: the extension's background service worker owns the WebSocket connections and executes commands via `chrome.debugger` (CDP) and content scripts.
 
@@ -17,15 +17,15 @@ DevTools does NOT need to be open: the extension's background service worker own
     *   `modules/background-console.js`: Console retrieval via CDP — reads Chrome's per-page console buffer on demand (`console_logs`) or watches live for a duration (`watch_console`); no extension-side log storage.
     *   `popup.js` / `popup.html`: Toolbar popup with the connection toggle.
     *   `panel.js` / `panel.html`: Optional DevTools panel (connection toggle, message viewer).
-*   **`/server`**: TypeScript/Node.js MCP server on port 61822. MCP clients connect via WebSocket at `ws://localhost:61822/mcp` or via stdio using the `kapture-mcp bridge` command. Tools are defined in `src/tools.yaml`.
+*   **`/server`**: TypeScript/Node.js MCP server on port 61822. MCP clients connect via WebSocket at `ws://localhost:61822/mcp` or via stdio using the `wisp-mcp bridge` command. Tools are defined in `src/tools.yaml`.
 *   **`/e2e`**: End-to-end tests.
 *   **`/website`**: Project documentation and website (GitHub Pages).
 *   **`/test-app`**: Electron test app that acts as an MCP client for manual testing.
 
 ## How it Works
 
-1.  The user installs the Kapture Chrome extension and starts the MCP server (usually automatically via the `npx kapture-mcp bridge` MCP client config).
-2.  The user connects a tab via the toolbar popup toggle, the DevTools Kapture panel, or a `?kapture-connect=true` URL parameter.
+1.  The user installs the Wisp Chrome extension and starts the MCP server (usually automatically via the `npx wisp-mcp bridge` MCP client config).
+2.  The user connects a tab via the toolbar popup toggle, the DevTools Wisp panel, or a `?wisp-connect=true` URL parameter.
 3.  The background service worker opens a WebSocket to the server and registers the tab.
 4.  MCP clients call tools (`navigate`, `click`, `fill`, `screenshot`, ...); the server forwards each command to the extension over WebSocket and returns the result.
 

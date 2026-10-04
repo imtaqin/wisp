@@ -18,7 +18,7 @@ describe('Reload Tool', function() {
 
   it('should reload the current page', async function() {
     // Get initial state
-    const initialTabInfo = await framework.readResource(`kapture://tab/${testTab.tabId}`);
+    const initialTabInfo = await framework.readResource(`wisp://tab/${testTab.tabId}`);
     const initialTab = JSON.parse(initialTabInfo.contents[0].text);
     const initialUrl = initialTab.url;
 
@@ -79,7 +79,7 @@ describe('Reload Tool', function() {
     expect(resultData.url).to.equal(testUrl);
 
     // Verify via tab info
-    const tabInfo = await framework.readResource(`kapture://tab/${testTab.tabId}`);
+    const tabInfo = await framework.readResource(`wisp://tab/${testTab.tabId}`);
     const tab = JSON.parse(tabInfo.contents[0].text);
     expect(tab.url).to.equal(testUrl);
   });

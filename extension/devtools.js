@@ -1,6 +1,6 @@
 // Create DevTools panel
 chrome.devtools.panels.create(
-  "Kapture",
+  "Wisp",
   null,
   "panel.html"
 );

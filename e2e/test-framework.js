@@ -29,7 +29,7 @@ class TestFramework {
     const transport = new WebSocketClientTransport(new URL(`ws://localhost:${this.serverPort}/mcp`));
 
     this.mcpClient = new Client({
-      name: 'kapture-e2e-test',
+      name: 'wisp-e2e-test',
       version: '1.0.0'
     }, {
       capabilities: {}

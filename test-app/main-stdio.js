@@ -26,7 +26,7 @@ function parseArgs() {
     } else if (args[i] === '--dev') {
       dev = true;
     } else if (args[i] === '--help' || args[i] === '-h') {
-      console.log('Kapture Test App');
+      console.log('Wisp Test App');
       console.log('Usage: npm start -- [options]');
       console.log('');
       console.log('Options:');
@@ -134,7 +134,7 @@ function killProcessOnPort(port, skipPrompt = false) {
             defaultId: 0,
             title: 'Existing Server Found',
             message: `A process is already using port ${port}`,
-            detail: `Process: ${processName} (PID: ${pid})\n\nThis might be a Kapture server from Claude Desktop or another instance.\n\nDo you want to kill it and start a new server?`
+            detail: `Process: ${processName} (PID: ${pid})\n\nThis might be a Wisp server from Claude Desktop or another instance.\n\nDo you want to kill it and start a new server?`
           });
 
           shouldKill = result.response === 0;
@@ -346,7 +346,7 @@ ipcMain.handle('mcp-connect', async () => {
         roots: {}
       },
       clientInfo: {
-        name: 'kapture-test-app',
+        name: 'wisp-test-app',
         version: '1.0.0'
       }
     });

@@ -1,10 +1,10 @@
 # Console Logs Message Flow
 
-This document describes how Kapture retrieves console logs: on demand via `console_logs`, and live via `watch_console`.
+This document describes how Wisp retrieves console logs: on demand via `console_logs`, and live via `watch_console`.
 
 ## Overview
 
-Kapture does not capture or store console logs itself. Chrome keeps a per-page console message buffer (the same one DevTools renders when opened after the fact). When a CDP session calls `Runtime.enable`, Chrome replays that buffer to the session. Kapture reads it on demand through `chrome.debugger`:
+Wisp does not capture or store console logs itself. Chrome keeps a per-page console message buffer (the same one DevTools renders when opened after the fact). When a CDP session calls `Runtime.enable`, Chrome replays that buffer to the session. Wisp reads it on demand through `chrome.debugger`:
 
 - **`console_logs`** — attach, enable `Runtime` + `Log`, collect the replayed buffer, detach. Returns what you would see if you opened the DevTools console: console messages, uncaught exceptions, and browser-generated entries (network errors, violations, etc.).
 - **`watch_console`** — same attach, but stays attached for a required `timeout` (ms), collecting live events as they happen. The replayed backlog is filtered out by timestamp; only events from the watch window are returned, in chronological order.
@@ -65,7 +65,7 @@ sequenceDiagram
     participant BC as background-console.js
     participant Chrome as Chrome (CDP)
 
-    Client->>MCP: console_logs tool / GET kapture://tab/{tabId}/console
+    Client->>MCP: console_logs tool / GET wisp://tab/{tabId}/console
     Note over Client,MCP: ?level=error&limit=50&before=timestamp
     MCP->>BG: {id, type: 'command', command: 'getLogs', params}
 
@@ -124,10 +124,10 @@ The tool call blocks for the full duration — that is the point: "click somethi
 
 ## Characteristics
 
-1. **Mirrors DevTools**: shows the current page's console since its last load — Chrome's buffer is capped at 1000 messages, cleared on navigation and by `console.clear()`. There is no separate Kapture history.
-2. **Catches what a console override can't**: uncaught exceptions, unhandled rejections, browser-generated entries, and logs from before Kapture connected.
+1. **Mirrors DevTools**: shows the current page's console since its last load — Chrome's buffer is capped at 1000 messages, cleared on navigation and by `console.clear()`. There is no separate Wisp history.
+2. **Catches what a console override can't**: uncaught exceptions, unhandled rejections, browser-generated entries, and logs from before Wisp connected.
 3. **Undetectable by the page**: no `console.*` wrapping, no injected scripts, no CSP interaction.
-4. **Infobar**: the "Kapture is debugging this browser" infobar shows while attached — briefly for `console_logs`, for the full duration of a `watch_console`.
+4. **Infobar**: the "Wisp is debugging this browser" infobar shows while attached — briefly for `console_logs`, for the full duration of a `watch_console`.
 5. **Pull-only**: there are no console push notifications to MCP clients; `watch_console` is the real-time mechanism.
 
 ## Error Handling

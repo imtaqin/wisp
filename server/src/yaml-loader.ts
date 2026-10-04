@@ -98,7 +98,7 @@ function processResources(resources: Record<string, any> | any[], isDynamic: boo
     const processedResource = {
       ...resource,
       key: isDynamic ? key : undefined,
-      uri: isDynamic ? `kapture://tab/${key}` : `kapture://${key}`,
+      uri: isDynamic ? `wisp://tab/${key}` : `wisp://${key}`,
       mimeType: resource.mimeType || 'application/json'
     };
     resourcesArray.push(processedResource);

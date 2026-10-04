@@ -1,6 +1,6 @@
 # GitHub Actions Workflows
 
-This directory contains GitHub Actions workflows for the Kapture project.
+This directory contains GitHub Actions workflows for the Wisp project.
 
 ## Workflows
 
@@ -8,8 +8,8 @@ This directory contains GitHub Actions workflows for the Kapture project.
 - **Trigger**: On every push to master/main, pull requests, or manual trigger
 - **Purpose**: Builds and packages the Chrome extension
 - **Output**: 
-  - `kapture-extension-{commit-sha}.zip` - Unique artifact for each commit (retained for 30 days)
-  - `kapture-extension-latest.zip` - Always contains the latest build (retained for 7 days)
+  - `wisp-extension-{commit-sha}.zip` - Unique artifact for each commit (retained for 30 days)
+  - `wisp-extension-latest.zip` - Always contains the latest build (retained for 7 days)
 
 ### release.yml
 - **Trigger**: When a version tag is pushed (e.g., `v1.0.0`)
@@ -22,7 +22,7 @@ This directory contains GitHub Actions workflows for the Kapture project.
 
 1. Go to the [Actions tab](../../actions) in the repository
 2. Click on the latest "Build Extension" workflow run
-3. Download the `kapture-extension-latest` artifact
+3. Download the `wisp-extension-latest` artifact
 
 ### Creating a Release
 

@@ -96,7 +96,7 @@ function readConfig(configPath: string): any {
   }
 }
 
-function isKaptureConfigured(configPath: string, configKey: string): boolean {
+function isWispConfigured(configPath: string, configKey: string): boolean {
   try {
     const config = readConfig(configPath);
     const keys = configKey.split('.');
@@ -107,15 +107,15 @@ function isKaptureConfigured(configPath: string, configKey: string): boolean {
       section = section[key];
     }
 
-    return !!section.kapture;
+    return !!section.wisp;
   } catch {
     return false;
   }
 }
 
-const KAPTURE_MCP_CONFIG = {
+const WISP_MCP_CONFIG = {
   command: "npx",
-  args: ["-y", "kapture-mcp@latest", "bridge"]
+  args: ["-y", "wisp-mcp@latest", "bridge"]
 };
 
 function writeConfig(configPath: string, config: any): void {
@@ -165,15 +165,15 @@ function updateAssistantConfig(name: string, configure: boolean): { success: boo
 
     const finalKey = keys[keys.length - 1];
     if (configure) {
-      // Add or update Kapture configuration
+      // Add or update Wisp configuration
       if (!configSection[finalKey]) {
         configSection[finalKey] = {};
       }
-      configSection[finalKey].kapture = KAPTURE_MCP_CONFIG;
+      configSection[finalKey].wisp = WISP_MCP_CONFIG;
     } else {
-      // Remove Kapture configuration
-      if (configSection[finalKey] && configSection[finalKey].kapture) {
-        delete configSection[finalKey].kapture;
+      // Remove Wisp configuration
+      if (configSection[finalKey] && configSection[finalKey].wisp) {
+        delete configSection[finalKey].wisp;
 
         // Clean up empty objects
         if (Object.keys(configSection[finalKey]).length === 0) {
@@ -211,8 +211,8 @@ export function detectAssistants(): Record<string, AssistantStatus> {
         installed = existsSync(configDir);
       }
 
-      // Check if Kapture is configured (only if config file exists)
-      const configured = existsSync(configPath) && isKaptureConfigured(configPath, config.configKey);
+      // Check if Wisp is configured (only if config file exists)
+      const configured = existsSync(configPath) && isWispConfigured(configPath, config.configKey);
 
       results[config.key] = {
         installed,

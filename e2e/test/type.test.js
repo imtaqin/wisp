@@ -11,7 +11,7 @@ describe('Type Tool Tests', function() {
   });
 
   it('should type text into a standard input via individual keystrokes', async function() {
-    const text = 'Hello, Kapture!';
+    const text = 'Hello, Wisp!';
 
     const resultData = await framework.callToolAndParse('type', {
       selector: '#keylog-input',

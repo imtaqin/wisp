@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { framework } from '../test-framework.js';
 import { expectValidTabInfo } from './helpers.js';
 
-describe('Kapture E2E Tests', function() {
+describe('Wisp E2E Tests', function() {
 
   describe('Basic Functionality', function() {
     it('should list available resources', async function() {
@@ -12,7 +12,7 @@ describe('Kapture E2E Tests', function() {
       expect(resources.length).to.be.greaterThan(0);
 
       // Should have tabs resource
-      const tabsResource = resources.find(r => r.uri === 'kapture://tabs');
+      const tabsResource = resources.find(r => r.uri === 'wisp://tabs');
       expect(tabsResource).to.exist;
       expect(tabsResource.name).to.equal('Connected Browser Tabs');
     });
@@ -65,7 +65,7 @@ describe('Kapture E2E Tests', function() {
       expect(resultData.url).to.equal('http://localhost:61822/test.html?navigated=true');
 
       // Verify navigation happened by checking current tab state
-      const tabInfo = await framework.readResource(`kapture://tab/${testTab.tabId}`);
+      const tabInfo = await framework.readResource(`wisp://tab/${testTab.tabId}`);
       const tab = JSON.parse(tabInfo.contents[0].text);
       expect(tab.url).to.equal('http://localhost:61822/test.html?navigated=true');
     });

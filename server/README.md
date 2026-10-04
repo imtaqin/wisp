@@ -1,6 +1,6 @@
-# Kapture MCP Server
+# Wisp MCP Server
 
-MCP server for Kapture browser automation. This server enables AI assistants like Claude to control web browsers through the Kapture Chrome extension.
+MCP server for Wisp browser automation. This server enables AI assistants like Claude to control web browsers through the Wisp Chrome extension.
 
 **✨ Key Feature**: Support for multiple AI assistants running simultaneously! All clients connect via WebSocket to the same server.
 
@@ -9,7 +9,7 @@ MCP server for Kapture browser automation. This server enables AI assistants lik
 ### Run with npx (no installation required)
 
 ```bash
-npx kapture-mcp
+npx wisp-mcp
 ```
 
 The server automatically runs on port 61822.
@@ -17,14 +17,14 @@ The server automatically runs on port 61822.
 ### Bridge mode (Alternative for stdio-based MCP clients)
 
 ```bash
-npx kapture-mcp bridge
+npx wisp-mcp bridge
 ```
 
 This starts the server and provides stdio-to-WebSocket translation using the built-in mcp2websocket bridge.
 
 ### Smart Server Detection
 
-When running `npx kapture-mcp`, it automatically detects if a server is already running:
+When running `npx wisp-mcp`, it automatically detects if a server is already running:
 - **No existing server**: Starts a new server
 - **Server already running**: Shows connection info and exits gracefully
 
@@ -33,13 +33,13 @@ This prevents port conflicts and provides helpful information about existing con
 ### Install globally
 
 ```bash
-npm install -g kapture-mcp
+npm install -g wisp-mcp
 ```
 
 ### Install locally in a project
 
 ```bash
-npm install kapture-mcp
+npm install wisp-mcp
 ```
 
 ## Usage with Claude Desktop
@@ -49,9 +49,9 @@ This single command starts the server and handles stdio communication:
 ```json
 {
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }
@@ -60,14 +60,14 @@ This single command starts the server and handles stdio communication:
 ### Alternative: Direct WebSocket connection
 First start the server:
 ```bash
-npx kapture-mcp
+npx wisp-mcp
 ```
 
 Then configure Claude Desktop to use WebSocket transport:
 ```json
 {
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "transport": "websocket",
       "url": "ws://localhost:61822/mcp"
     }
@@ -84,7 +84,7 @@ The server always runs on port 61822
 
 ## Running Multiple AI Assistants
 
-Kapture supports multiple AI clients through a single server instance:
+Wisp supports multiple AI clients through a single server instance:
 
 - **All clients**: Connect via WebSocket to `ws://localhost:61822/mcp`
 - All clients share access to the same browser tabs
@@ -93,16 +93,16 @@ Kapture supports multiple AI clients through a single server instance:
 
 Start the server manually:
 ```bash
-npx kapture-mcp
+npx wisp-mcp
 ```
 
 Claude Desktop (claude_desktop_config.json):
 ```json
 {
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }
@@ -112,7 +112,7 @@ Cline (VS Code settings.json) - WebSocket connection:
 ```json
 {
   "cline.mcpServers": {
-    "kapture": {
+    "wisp": {
       "transport": "websocket",
       "url": "ws://localhost:61822/mcp"
     }
@@ -125,12 +125,12 @@ All connected clients can control the same browser tabs simultaneously.
 ## Requirements
 
 - Node.js 18 or higher
-- Chrome browser with Kapture extension installed
+- Chrome browser with Wisp extension installed
 
 ## How it Works
 
 1. The MCP server starts and listens on port 61822
-2. The Kapture Chrome extension connects to the server via WebSocket
+2. The Wisp Chrome extension connects to the server via WebSocket
 3. AI assistants can now control the browser through MCP tools
 
 ## Server Architecture
@@ -147,7 +147,7 @@ graph LR
         MCPN["MCP Client N<br/>Custom"]
     end
     
-    subgraph "Kapture MCP Server [:61822]"
+    subgraph "Wisp MCP Server [:61822]"
         WSS_MCP["ws://localhost:61822/mcp"]
         HTTP["HTTP Server"]
         
@@ -236,18 +236,18 @@ graph LR
 
 ## MCP Resources
 
-- `kapture://tabs` - List all connected browser tabs
-- `kapture://tab/{tabId}` - Get detailed tab information
-- `kapture://tab/{tabId}/console` - Get console logs
-- `kapture://tab/{tabId}/screenshot` - Capture screenshots
-- `kapture://tab/{tabId}/dom` - Get DOM HTML
-- `kapture://tab/{tabId}/elementsFromPoint` - Get elements at coordinates
-- `kapture://tab/{tabId}/elements?selector={selector}&visible={true|false|all}` - Query all elements matching a CSS selector or XPath with optional visibility filtering
+- `wisp://tabs` - List all connected browser tabs
+- `wisp://tab/{tabId}` - Get detailed tab information
+- `wisp://tab/{tabId}/console` - Get console logs
+- `wisp://tab/{tabId}/screenshot` - Capture screenshots
+- `wisp://tab/{tabId}/dom` - Get DOM HTML
+- `wisp://tab/{tabId}/elementsFromPoint` - Get elements at coordinates
+- `wisp://tab/{tabId}/elements?selector={selector}&visible={true|false|all}` - Query all elements matching a CSS selector or XPath with optional visibility filtering
 
 ## Documentation
 
 For full documentation and Chrome extension installation, visit:
-https://github.com/williamkapke/kapture
+https://github.com/imtaqin/wisp
 
 ## License
 

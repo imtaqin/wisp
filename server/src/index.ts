@@ -24,11 +24,16 @@ import { isOriginAllowed, isWebSocketOriginAllowed, isAssistantsReadOrigin, isAs
 // ========================================================================
 
 // Set process title for better identification
-process.title = 'Kapture MCP Server';
+process.title = 'Wisp MCP Server';
 
-// Fixed port for all connections (overridable via KAPTURE_PORT for tests /
+// Fixed port for all connections (overridable via WISP_PORT for tests /
 // non-default deployments; the extension still defaults to 61822).
-const PORT = Number(process.env.KAPTURE_PORT) || 61822;
+const PORT = Number(process.env.WISP_PORT) || 61822;
+
+// Bind address. Loopback by default; set WISP_HOST=0.0.0.0 to accept MCP
+// clients from other devices. The server has no auth, so only do that on a
+// trusted network.
+const HOST = process.env.WISP_HOST || '127.0.0.1';
 
 // Get directory path for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -184,7 +189,7 @@ const httpServer = createServer(async (req, res) => {
 
   // Root - send browsers to the hosted dashboard
   if (req.url === '/' && req.method === 'GET') {
-    res.writeHead(302, { Location: 'https://williamkapke.github.io/kapture/clients.html' });
+    res.writeHead(302, { Location: 'https://imtaqin.github.io/wisp/clients.html' });
     res.end();
     return;
   }
@@ -322,22 +327,22 @@ const httpServer = createServer(async (req, res) => {
   // All other endpoints delegate to resource handler
   if (req.url && req.method === 'GET') {
     try {
-      // Convert HTTP URL to kapture:// URI
-      let kaptureUri = req.url.substring(1); // Remove leading slash
-      const isScreenshotView = kaptureUri.includes('/screenshot/view')
+      // Convert HTTP URL to wisp:// URI
+      let wispUri = req.url.substring(1); // Remove leading slash
+      const isScreenshotView = wispUri.includes('/screenshot/view')
 
       // Special case for tabs endpoint
-      if (kaptureUri === 'tabs') {
-        kaptureUri = 'kapture://tabs';
-      } else if (kaptureUri.startsWith('tab/')) {
-        kaptureUri = 'kapture://' + kaptureUri.replace('/screenshot/view', '/screenshot');
+      if (wispUri === 'tabs') {
+        wispUri = 'wisp://tabs';
+      } else if (wispUri.startsWith('tab/')) {
+        wispUri = 'wisp://' + wispUri.replace('/screenshot/view', '/screenshot');
       } else {
         // Unknown endpoint
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Not found' }));
         return;
       }
-      const { isError, contents } = await resourceHandler.readResource(kaptureUri);
+      const { isError, contents } = await resourceHandler.readResource(wispUri);
 
       // Special handling for screenshot/view endpoint
       if (!isError && isScreenshotView) {
@@ -349,7 +354,7 @@ const httpServer = createServer(async (req, res) => {
       }
       else {
         let result = contents[0].text;
-        if(!isError && kaptureUri.includes('/screenshot')) {
+        if(!isError && wispUri.includes('/screenshot')) {
           // move the image data to the first object
           const reslutObj = JSON.parse(contents[0].text);
           result = JSON.stringify({
@@ -421,8 +426,13 @@ wss.on('connection', (ws, request) => {
  */
 function printStartupBanner() {
   console.log('='.repeat(70));
-  console.log('Kapture MCP Server Started');
+  console.log('Wisp MCP Server Started');
   console.log();
+  if (HOST !== '127.0.0.1' && HOST !== 'localhost') {
+    console.log(`Listening on ${HOST}:${PORT} - MCP clients on other devices: ws://<this-ip>:${PORT}/mcp`);
+    console.log('WARNING: no authentication; anyone who can reach this port can drive the browser.');
+    console.log();
+  }
   console.log('HTTP Endpoints:');
   console.log(`  MCP clients: http://127.0.0.1:${PORT}/clients`);
   console.log(`  Resources: http://127.0.0.1:${PORT}/tabs`);
@@ -441,7 +451,7 @@ function printStartupBanner() {
 
 /**
  * Start the HTTP/WebSocket server and resolve once it is listening on
- * 127.0.0.1:PORT, or reject if the socket fails to bind.
+ * HOST:PORT, or reject if the socket fails to bind.
  *
  * Unlike the standalone entrypoint below, this neither writes to stdout nor
  * exits the process, so the bridge can host the server in-process (where
@@ -452,7 +462,7 @@ export function startServer(): Promise<void> {
   return new Promise((resolve, reject) => {
     const onError = (error: Error) => reject(error);
     httpServer.once('error', onError);
-    httpServer.listen(PORT, '127.0.0.1', () => {
+    httpServer.listen(PORT, HOST, () => {
       httpServer.removeListener('error', onError);
       // Once bound, log later errors instead of crashing the (possibly shared
       // with the bridge) process.
@@ -525,7 +535,7 @@ if (isMainModule()) {
       await startServer();
       printStartupBanner();
     } catch (error) {
-      logger.error('Failed to start Kapture server:', error);
+      logger.error('Failed to start Wisp server:', error);
       process.exit(1);
     }
   })();

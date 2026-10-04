@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kapture - Local Server</title>
+  <title>Wisp - Local Server</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -158,10 +158,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>Kapture Local Server</h1>
+    <h1>Wisp Local Server</h1>
     <div class="server-url" id="server-url"></div>
     <div class="banner error" id="offline-banner">
-      Cannot reach the Kapture server. Make sure it is running on port 61822.
+      Cannot reach the Wisp server. Make sure it is running on port 61822.
     </div>
 
     <!-- Home view: clients + tabs -->
@@ -456,7 +456,7 @@
         // Older servers don't have /clients
         renderedClientsKey = null;
         show(byId('clients-table'), false);
-        byId('clients-empty').textContent = 'Not available on this server version - update kapture-mcp to see connected MCP clients.';
+        byId('clients-empty').textContent = 'Not available on this server version - update wisp-mcp to see connected MCP clients.';
         show(byId('clients-empty'), true);
       }
 

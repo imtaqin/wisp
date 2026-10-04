@@ -390,7 +390,7 @@ tools:
 
   network_monitor:
     description: >-
-      Turn network monitoring on or off for a browser tab. While on, Kapture stays
+      Turn network monitoring on or off for a browser tab. While on, Wisp stays
       attached to the tab and records every network request (url, method, status,
       type, size, timing) into a buffer you read with `network_requests`; fetch an
       individual request/response body with `network_body`. The capture has NO
@@ -468,7 +468,7 @@ tools:
       Execute JavaScript in the page and return the result. The code runs in
       the page's main world via Chrome DevTools Protocol; the result must be
       JSON-serializable. Promises are awaited. Only available when the user
-      has enabled "Allow JavaScript Execution" for the tab in the Kapture
+      has enabled "Allow JavaScript Execution" for the tab in the Wisp
       extension. Prefer the purpose-built tools (click, fill, dom, elements,
       etc.) - only use evaluate when no other tool can accomplish the task.
     required: [tabId, code]
@@ -512,8 +512,8 @@ tools:
 
   new_tab:
     description: >-
-      Opens a new browser tab with the Kapture MCP usage documentation page. 
-      The page will automatically connect to the Kapture server. Returns the 
+      Opens a new browser tab with the Wisp MCP usage documentation page. 
+      The page will automatically connect to the Wisp server. Returns the 
       tab ID of the newly opened tab once it connects.
     properties:
       browser:

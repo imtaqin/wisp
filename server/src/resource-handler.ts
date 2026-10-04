@@ -9,7 +9,7 @@ export class ResourceHandler {
 
   // Shared resource reading logic
   public async readResource(uri: string): Promise<any> {
-    if (uri === 'kapture://tabs') {
+    if (uri === 'wisp://tabs') {
       const result = await this.toolHandler.callTool('list_tabs', {});
       const tabsData = JSON.parse(result.content[0].text);
       const tabsArray = tabsData.tabs || [];
@@ -18,12 +18,12 @@ export class ResourceHandler {
 
     // Check various resource patterns
     const patterns = [
-      { regex: /^kapture:\/\/tab\/(.+)\/console(?:\?.*)?$/, tool: 'console_logs' },
-      { regex: /^kapture:\/\/tab\/(.+)\/screenshot(?:\?.*)?$/, tool: 'screenshot' },
-      { regex: /^kapture:\/\/tab\/(.+)\/elementsFromPoint(?:\?.*)?$/, tool: 'elementsFromPoint' },
-      { regex: /^kapture:\/\/tab\/(.+)\/dom(?:\?.*)?$/, tool: 'dom' },
-      { regex: /^kapture:\/\/tab\/(.+)\/elements(?:\?.*)?$/, tool: 'elements' },
-      { regex: /^kapture:\/\/tab\/(.+)$/, tool: 'tab_detail' }
+      { regex: /^wisp:\/\/tab\/(.+)\/console(?:\?.*)?$/, tool: 'console_logs' },
+      { regex: /^wisp:\/\/tab\/(.+)\/screenshot(?:\?.*)?$/, tool: 'screenshot' },
+      { regex: /^wisp:\/\/tab\/(.+)\/elementsFromPoint(?:\?.*)?$/, tool: 'elementsFromPoint' },
+      { regex: /^wisp:\/\/tab\/(.+)\/dom(?:\?.*)?$/, tool: 'dom' },
+      { regex: /^wisp:\/\/tab\/(.+)\/elements(?:\?.*)?$/, tool: 'elements' },
+      { regex: /^wisp:\/\/tab\/(.+)$/, tool: 'tab_detail' }
     ];
 
     for (const pattern of patterns) {

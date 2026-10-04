@@ -1,5 +1,5 @@
 /* =========================================================================
-   KAPTURE — redesign
+   WISP — redesign
    Type: Schibsted Grotesk (display/UI) + JetBrains Mono (code/labels)
    Light-mode primary. Themed accent (see [data-theme]).
    ========================================================================= */
@@ -17,11 +17,11 @@
   --line:      oklch(91% 0.006 268);
   --line-2:    oklch(86% 0.008 268);
 
-  /* accent — default: indigo→violet (homage to original brand) */
-  --accent:    oklch(56% 0.17 285);
-  --accent-2:  oklch(52% 0.16 312);
-  --accent-ink:oklch(47% 0.17 285);
-  --accent-wash:oklch(96% 0.03 290);
+  /* accent — Wisp amber */
+  --accent:    oklch(68% 0.145 66);
+  --accent-2:  oklch(72% 0.135 50);
+  --accent-ink:oklch(52% 0.13 60);
+  --accent-wash:oklch(96% 0.04 75);
 
   --radius:   14px;
   --radius-sm:9px;

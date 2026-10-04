@@ -1,7 +1,7 @@
 {
-  "name": "kapture-e2e-tests",
+  "name": "wisp-e2e-tests",
   "version": "1.0.0",
-  "description": "End-to-end tests for Kapture MCP Browser Automation",
+  "description": "End-to-end tests for Wisp MCP Browser Automation",
   "type": "module",
   "scripts": {
     "test": "mocha"

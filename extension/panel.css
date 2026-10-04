@@ -6,7 +6,7 @@
   --text-secondary: #969696;
   --border-color: #464647;
   --accent-blue: #3794ff;
-  --accent-green: #4ec9b0;
+  --accent-green: #fbbf24;
   --accent-orange: #ff9800;
   --accent-red: #f44336;
   --hover-bg: #2a2a2a;
@@ -88,7 +88,7 @@ html, body {
 }
 
 .status.disconnected {
-  color: #8ab4f8;
+  color: #fcd34d;
 }
 
 .status.retrying {

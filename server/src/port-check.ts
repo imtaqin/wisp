@@ -7,7 +7,46 @@ const exec = promisify(execCallback);
 /**
  * Check if a port is already in use and get process info
  */
-async function getPortInfo(port: number): Promise<{ inUse: boolean; pid?: string; command?: string }> {
+export interface PortInfo {
+  inUse: boolean;
+  pid?: string;
+  command?: string;
+}
+
+/**
+ * Parse the platform's socket listing into "is something listening on `port`".
+ *
+ * Only a LISTENING socket whose *local* port matches counts. `netstat -ano`
+ * output also carries this port as the remote end of client sockets and as
+ * leftover TIME_WAIT entries; matching those made the server refuse to start
+ * on a free port, reporting PID 0 ("in use by undefined").
+ */
+export function parsePortInfo(stdout: string, platform: string, port: number): PortInfo {
+  const lines = stdout.trim().split('\n').map((line) => line.trim()).filter(Boolean);
+
+  if (platform === 'darwin' || platform === 'linux') {
+    // lsof is already filtered to LISTEN by the caller's grep
+    const parts = lines[0]?.split(/\s+/);
+    return parts ? { inUse: true, pid: parts[1], command: parts[0] } : { inUse: false };
+  }
+
+  if (platform === 'win32') {
+    // Proto  Local Address  Foreign Address  State  PID
+    const listening = lines.find((line) => {
+      const parts = line.split(/\s+/);
+      const [, local, , state] = parts;
+      return state === 'LISTENING' && local?.endsWith(`:${port}`);
+    });
+    if (!listening) return { inUse: false };
+
+    const pid = listening.split(/\s+/).pop();
+    return { inUse: true, pid: pid && pid !== '0' ? pid : undefined };
+  }
+
+  return { inUse: false };
+}
+
+async function getPortInfo(port: number): Promise<PortInfo> {
   const platform = process.platform;
   let command: string;
 
@@ -20,29 +59,7 @@ async function getPortInfo(port: number): Promise<{ inUse: boolean; pid?: string
   }
 
   const { stdout } = await exec(command);
-
-  if (stdout.trim()) {
-    if (platform === 'darwin' || platform === 'linux') {
-      const lines = stdout.trim().split('\n');
-      const parts = lines[0].split(/\s+/);
-      return {
-        inUse: true,
-        pid: parts[1],
-        command: parts[0]
-      };
-    } else if (platform === 'win32') {
-      const lines = stdout.trim().split('\n');
-      const listenLine = lines.find(l => l.includes('LISTENING')) || lines[0];
-      const parts = listenLine.trim().split(/\s+/);
-      const pid = parts[parts.length - 1];
-      return {
-        inUse: true,
-        pid: pid
-      };
-    }
-  }
-
-  return { inUse: false };
+  return parsePortInfo(stdout, platform, port);
 }
 
 /**
@@ -57,12 +74,16 @@ export async function checkIfPortInUse(port: number): Promise<void> {
 
   if (portCheck.inUse) {
     let message = '';
-    if (portCheck.pid) {
-      if (portCheck.command !== 'node') {
+    {
+      if (portCheck.command === 'node') {
+        message = `✅ A server instance is already running!`;
+      }
+      else if (portCheck.command) {
         message = `⚠️ Port ${port} is already in use by "${portCheck.command}"`;
       }
       else {
-        message = `✅ A server instance is already running!`;
+        // Windows: netstat gives no process name, only a PID
+        message = `⚠️ Port ${port} is already in use`;
       }
       console.log(`${GREEN}┌${'─'.repeat(message.length + 3)}┐${RESET}`);
       console.log(`${GREEN}│${RESET} ${YELLOW}${message}${RESET} ${GREEN}│${RESET}`);

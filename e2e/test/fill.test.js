@@ -11,7 +11,7 @@ describe('Fill Tool Tests', function() {
   });
 
   it('should fill text input', async function() {
-    const testValue = 'Hello, Kapture!';
+    const testValue = 'Hello, Wisp!';
 
     const resultData = await framework.callToolAndParse('fill', {
       selector: '#text-input',

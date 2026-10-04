@@ -65,9 +65,9 @@ extension-build/
 *.dxt
 
 /extension/icons/generate-icons.html
-/extension/KaptureDevToolsPanel.jpg
+/extension/WispDevToolsPanel.jpg
 /extension/ScreenshotWithExtensionPanel.jpg
-/kapture-extension.zip
+/wisp-extension.zip
 
 # Mocks folder
 mocks/

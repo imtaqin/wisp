@@ -64,13 +64,13 @@ describe('Dialog Tool Tests', function() {
 
     const handled = await framework.callToolAndParse('dialog', {
       accept: true,
-      text: 'hello from kapture'
+      text: 'hello from wisp'
     });
     expect(handled).to.have.property('handled').that.equals(true);
 
     await delay(200);
     const dom = await framework.callToolAndParse('dom', { selector: '#dialog-result' });
-    expect(dom.html).to.include('prompt: hello from kapture');
+    expect(dom.html).to.include('prompt: hello from wisp');
   });
 
   it('should close an alert', async function() {

@@ -1,4 +1,4 @@
-// Renderer process for Kapture MCP Test Client
+// Renderer process for Wisp MCP Test Client
 let connected = false;
 let currentTools = [];
 let currentResources = [];
@@ -117,7 +117,7 @@ async function refreshTabs(silent = false) {
     }
 
     const response = await window.electronAPI.sendMCPRequest('resources/read', {
-      uri: 'kapture://tabs'
+      uri: 'wisp://tabs'
     });
 
     // Parse the resource data
@@ -354,7 +354,7 @@ function displaySelectedItem() {
   if (!selectedItem || !selectedTabId) {
     contentContainerEl.innerHTML = `
       <div class="empty-state">
-        <h2>Welcome to Kapture Test Client</h2>
+        <h2>Welcome to Wisp Test Client</h2>
         <p>Select a tab from the sidebar to get started</p>
         <p class="hint">Tools and resources will appear once a tab is selected</p>
       </div>
@@ -1217,7 +1217,7 @@ document.getElementById('clear-console').addEventListener('click', () => {
 window.electronAPI.onMCPNotification((message) => {
   if (message.method === 'log' && message.params) {
     log(message.params.message, message.params.type || 'info');
-  } else if (message.method === 'kapture/tab_disconnected' && message.params) {
+  } else if (message.method === 'wisp/tab_disconnected' && message.params) {
     // Handle tab disconnection notification
     const { tabId } = message.params;
     log(`Tab ${tabId} disconnected`, 'warning');
@@ -1234,7 +1234,7 @@ window.electronAPI.onMCPNotification((message) => {
 
     // Update UI
     displayTabs();
-  } else if (message.method === 'kapture/tabs_changed' && message.params) {
+  } else if (message.method === 'wisp/tabs_changed' && message.params) {
     // Handle tabs list change notification
     const { tabs } = message.params;
     log(`Tabs list changed: ${tabs.length} tabs`, 'info');
@@ -1273,7 +1273,7 @@ window.electronAPI.onMCPNotification((message) => {
         }
       }
     }
-  } else if (message.method === 'kapture/console_log' && message.params) {
+  } else if (message.method === 'wisp/console_log' && message.params) {
     // Handle real-time console log notification
     const { tabId, logEntry } = message.params;
     const tabName = currentTabs.find(t => t.tabId === tabId)?.title || tabId;
@@ -1311,7 +1311,7 @@ window.electronAPI.onMCPDisconnected((data) => {
 window.electronAPI.onMCPError((data) => {
   if (data.type === 'PORT_IN_USE') {
     log(data.message, 'error');
-    alert('Port 61822 is already in use!\n\nPlease stop any running Kapture server instances:\n- Check for other terminal windows running "npm start"\n- Check for other Electron test app instances\n- Use "lsof -i :61822" to find the process');
+    alert('Port 61822 is already in use!\n\nPlease stop any running Wisp server instances:\n- Check for other terminal windows running "npm start"\n- Check for other Electron test app instances\n- Use "lsof -i :61822" to find the process');
     connected = false;
     statusEl.classList.remove('connected');
     statusTextEl.textContent = 'Port In Use';
@@ -1387,7 +1387,7 @@ document.addEventListener('mouseup', () => {
 });
 
 // Initial state
-log('Kapture MCP Test Client ready');
+log('Wisp MCP Test Client ready');
 
 // Setup navigation listeners
 setupNavigationListeners();

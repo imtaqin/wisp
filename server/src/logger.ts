@@ -24,8 +24,8 @@ class Logger {
 
   constructor() {
     // Check if we should log to file
-    if (process.env.KAPTURE_LOG_FILE) {
-      this.logFile = fs.createWriteStream(process.env.KAPTURE_LOG_FILE, { flags: 'a' });
+    if (process.env.WISP_LOG_FILE) {
+      this.logFile = fs.createWriteStream(process.env.WISP_LOG_FILE, { flags: 'a' });
     }
   }
 

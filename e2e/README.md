@@ -1,6 +1,6 @@
-# Kapture E2E Tests
+# Wisp E2E Tests
 
-This directory contains end-to-end tests for the Kapture MCP Browser Automation extension.
+This directory contains end-to-end tests for the Wisp MCP Browser Automation extension.
 
 ## Setup
 
@@ -16,7 +16,7 @@ This directory contains end-to-end tests for the Kapture MCP Browser Automation 
    npm run build
    ```
 
-3. Make sure the Kapture extension is installed in your system's default browser (or the one you pass to `new_tab`). The framework opens and connects its own test tab via the `new_tab` tool — you do not need to open a tab or the test page yourself.
+3. Make sure the Wisp extension is installed in your system's default browser (or the one you pass to `new_tab`). The framework opens and connects its own test tab via the `new_tab` tool — you do not need to open a tab or the test page yourself.
 
 ## Running Tests
 
@@ -47,10 +47,10 @@ npm test test/basic.test.js
    ```javascript
    import { TestFramework } from '../test-framework.js';
    ```
-3. Use the framework methods to interact with Kapture
+3. Use the framework methods to interact with Wisp
 
 ## Notes
 
 - The framework will check if a server is already running before starting a new one
-- Tests require the Kapture extension installed in the browser `new_tab` launches; the framework opens its own test tab and navigates it to the test page — no manual tab needed
+- Tests require the Wisp extension installed in the browser `new_tab` launches; the framework opens its own test tab and navigates it to the test page — no manual tab needed
 - The test page (test.html) includes various elements for testing all tools

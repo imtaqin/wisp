@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Using Kapture with MCP Clients - Documentation</title>
+    <title>Using Wisp with MCP Clients - Documentation</title>
     <style>
         * {
             margin: 0;
@@ -278,9 +278,9 @@
     <div class="container">
         <a href="index.html" class="back-link">← Back to Documentation</a>
 
-        <h1>Using Kapture with MCP Clients</h1>
+        <h1>Using Wisp with MCP Clients</h1>
 
-        <p>This guide explains how to configure and use Kapture with Model Context Protocol (MCP) clients like Claude Desktop, Cline, and custom implementations.</p>
+        <p>This guide explains how to configure and use Wisp with Model Context Protocol (MCP) clients like Claude Desktop, Cline, and custom implementations.</p>
 
         <div class="toc">
             <h2>Table of Contents</h2>
@@ -301,7 +301,7 @@
 
             <h3>1. Install the Chrome Extension</h3>
             <ol>
-                <li>Download from <a href="https://github.com/williamkapke/kapture/releases" style="color: white; text-decoration: underline;">releases</a> or clone the repo</li>
+                <li>Download from <a href="https://github.com/imtaqin/wisp/releases" style="color: white; text-decoration: underline;">releases</a> or clone the repo</li>
                 <li>Open <code>chrome://extensions/</code></li>
                 <li>Enable "Developer mode"</li>
                 <li>Click "Load unpacked" and select the <code>extension</code> folder</li>
@@ -312,9 +312,9 @@
             <p><strong>Claude Desktop</strong> (<code>~/Library/Application Support/Claude/claude_desktop_config.json</code>):</p>
             <pre><code>{
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }</code></pre>
@@ -322,9 +322,9 @@
             <p><strong>Cline/VS Code</strong> (settings.json):</p>
             <pre><code>{
   "cline.mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }</code></pre>
@@ -333,7 +333,7 @@
             <ol>
                 <li>Open any website in Chrome</li>
                 <li>Open DevTools (F12)</li>
-                <li>Click the "Kapture" panel</li>
+                <li>Click the "Wisp" panel</li>
                 <li>You'll see "Connected" status</li>
             </ol>
 
@@ -349,12 +349,12 @@
 
         <h2 id="understanding-the-architecture">Understanding the Architecture</h2>
 
-        <h3>How Kapture Works</h3>
+        <h3>How Wisp Works</h3>
 
         <div class="mermaid">
 graph LR
     MCP[MCP Client<br/>Claude/Cline] -->|stdio| B[bridge]
-    B -->|WebSocket| KS[Kapture Server]
+    B -->|WebSocket| KS[Wisp Server]
     KS --> CE[Chrome Extension]
     CE --> BT[Browser Tabs]
         </div>
@@ -368,7 +368,7 @@ graph LR
         </ol>
 
         <h3>Smart Server Management</h3>
-        <p>The <code>npx kapture-mcp</code> command includes intelligent server detection:</p>
+        <p>The <code>npx wisp-mcp</code> command includes intelligent server detection:</p>
         <ul>
             <li>If no server is running: Starts a new server</li>
             <li>If server already exists: Shows connection info and exits gracefully</li>
@@ -389,9 +389,9 @@ graph LR
         <h4>Recommended: Bridge Command</h4>
         <pre><code>{
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "npx",
-      "args": ["-y", "kapture-mcp@latest", "bridge"]
+      "args": ["-y", "wisp-mcp@latest", "bridge"]
     }
   }
 }</code></pre>
@@ -408,9 +408,9 @@ graph LR
         <p>If you've cloned the repository:</p>
         <pre><code>{
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "command": "node",
-      "args": ["/path/to/kapture/server/dist/index.js", "bridge"]
+      "args": ["/path/to/wisp/server/dist/index.js", "bridge"]
     }
   }
 }</code></pre>
@@ -419,11 +419,11 @@ graph LR
         <p>For custom integrations or manual server control:</p>
 
         <ol>
-            <li>Start server manually: <code>npx kapture-mcp</code></li>
+            <li>Start server manually: <code>npx wisp-mcp</code></li>
             <li>Configure client:
                 <pre><code>{
   "mcpServers": {
-    "kapture": {
+    "wisp": {
       "transport": "websocket",
       "url": "ws://localhost:61822/mcp"
     }
@@ -450,7 +450,7 @@ graph LR
 
         <h2 id="available-tools">Available Tools</h2>
 
-        <p>Kapture provides 28 tools organized into functional categories:</p>
+        <p>Wisp provides 28 tools organized into functional categories:</p>
 
         <h3>Navigation Tools</h3>
 
@@ -759,7 +759,7 @@ graph LR
                 <pre><code>{
   browser: "chrome"  // optional
 }</code></pre>
-                <p>Opens the Kapture how-to page.</p>
+                <p>Opens the Wisp how-to page.</p>
             </div>
 
             <div class="tool-card">
@@ -774,7 +774,7 @@ graph LR
         <h3>JavaScript Execution</h3>
 
         <div class="warning">
-            <p><strong>Gated tool:</strong> <code>evaluate</code> is off by default. It is hidden from <code>tools/list</code> (and calls are rejected) until the user turns on the "Allow JS execution" toggle in the Kapture extension popup or DevTools panel for a connected tab. The grant is in-memory only and resets whenever the tab disconnects. When availability changes, the server sends <code>notifications/tools/list_changed</code>.</p>
+            <p><strong>Gated tool:</strong> <code>evaluate</code> is off by default. It is hidden from <code>tools/list</code> (and calls are rejected) until the user turns on the "Allow JS execution" toggle in the Wisp extension popup or DevTools panel for a connected tab. The grant is in-memory only and resets whenever the tab disconnects. When availability changes, the server sends <code>notifications/tools/list_changed</code>.</p>
         </div>
 
         <div class="tool-grid">
@@ -815,37 +815,37 @@ graph LR
             </thead>
             <tbody>
                 <tr>
-                    <td><code>kapture://tabs</code></td>
+                    <td><code>wisp://tabs</code></td>
                     <td>List of all connected tabs</td>
                     <td>None</td>
                 </tr>
                 <tr>
-                    <td><code>kapture://tab/{tabId}</code></td>
+                    <td><code>wisp://tab/{tabId}</code></td>
                     <td>Detailed tab information</td>
                     <td>None</td>
                 </tr>
                 <tr>
-                    <td><code>kapture://tab/{tabId}/console</code></td>
+                    <td><code>wisp://tab/{tabId}/console</code></td>
                     <td>Console logs with pagination</td>
                     <td><code>before</code>, <code>limit</code>, <code>level</code></td>
                 </tr>
                 <tr>
-                    <td><code>kapture://tab/{tabId}/screenshot</code></td>
+                    <td><code>wisp://tab/{tabId}/screenshot</code></td>
                     <td>Screenshot as MCP resource</td>
                     <td><code>selector</code>, <code>scale</code>, <code>format</code>, <code>quality</code></td>
                 </tr>
                 <tr>
-                    <td><code>kapture://tab/{tabId}/dom</code></td>
+                    <td><code>wisp://tab/{tabId}/dom</code></td>
                     <td>DOM HTML content</td>
                     <td><code>selector</code></td>
                 </tr>
                 <tr>
-                    <td><code>kapture://tab/{tabId}/elements</code></td>
+                    <td><code>wisp://tab/{tabId}/elements</code></td>
                     <td>Query elements</td>
                     <td><code>selector</code>, <code>visible</code></td>
                 </tr>
                 <tr>
-                    <td><code>kapture://tab/{tabId}/elementsFromPoint</code></td>
+                    <td><code>wisp://tab/{tabId}/elementsFromPoint</code></td>
                     <td>Elements at coordinates</td>
                     <td><code>x</code>, <code>y</code> (required)</td>
                 </tr>
@@ -1034,7 +1034,7 @@ for (let i = 0; i &lt; 5; i++) {
             <div class="tool-card">
                 <h4>"No tabs connected"</h4>
                 <ul>
-                    <li>Click the Kapture toolbar icon</li>
+                    <li>Click the Wisp toolbar icon</li>
                     <li>Flip the connection toggle</li>
                     <li>Check the badge shows ✓</li>
                     <li>Reload the page if needed</li>
@@ -1107,14 +1107,14 @@ elements.forEach(el => {
         <h3>Multiple AI Assistants</h3>
 
         <div class="success">
-            <p><strong>Kapture excels at supporting multiple AI clients simultaneously!</strong></p>
+            <p><strong>Wisp excels at supporting multiple AI clients simultaneously!</strong></p>
             <ol>
                 <li>Each client uses the same bridge configuration</li>
                 <li>Server automatically manages shared access</li>
                 <li>Commands are queued per tab to prevent conflicts</li>
                 <li>All clients receive real-time notifications</li>
             </ol>
-            <p>See the <a href="https://williamkapke.github.io/kapture/MULTI_ASSISTANT_GUIDE.html">Multi-Assistant Guide</a> for detailed setup.</p>
+            <p>See the <a href="https://imtaqin.github.io/wisp/MULTI_ASSISTANT_GUIDE.html">Multi-Assistant Guide</a> for detailed setup.</p>
         </div>
 
         <h3>Custom MCP Client Integration</h3>
@@ -1123,7 +1123,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import { spawn } from 'child_process';
 
 // Spawn the server with bridge
-const proc = spawn('npx', ["-y", 'kapture-mcp', 'bridge']);
+const proc = spawn('npx', ["-y", 'wisp-mcp', 'bridge']);
 const transport = new StdioClientTransport({
   command: proc
 });
@@ -1139,7 +1139,7 @@ await client.connect(transport);
 
 // Subscribe to notifications
 client.on('notification', (notification) => {
-  if (notification.method === 'kapture/tabs_changed') {
+  if (notification.method === 'wisp/tabs_changed') {
     console.log('Tabs changed:', notification.params);
   }
 });
@@ -1194,7 +1194,7 @@ if (tabs.length === 0) {
         <h2>Summary</h2>
 
         <div class="highlight">
-            <p>Kapture provides a robust bridge between AI assistants and web browsers through:</p>
+            <p>Wisp provides a robust bridge between AI assistants and web browsers through:</p>
             <ul>
                 <li>19 specialized tools for browser automation</li>
                 <li>Smart server management with automatic lifecycle handling</li>
