@@ -772,7 +772,7 @@ const helpers = {
       return respondWith({ written: true, length: String(text).length });
     } catch (e) {
       return respondWithError('CLIPBOARD_BLOCKED',
-        `${e.message}. The clipboard is only writable while the tab is focused - bring it to the front with show first.`);
+        `${e.message}. The clipboard is only writable while this tab is the one on screen.`);
     }
   },
 
@@ -782,7 +782,7 @@ const helpers = {
       return respondWith({ text, length: text.length });
     } catch (e) {
       return respondWithError('CLIPBOARD_BLOCKED',
-        `${e.message}. Reading the clipboard needs the tab focused and the page permitted - bring it to the front with show first.`);
+        `${e.message}. Reading the clipboard needs this tab to be the one on screen, with permission granted.`);
     }
   },
 

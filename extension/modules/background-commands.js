@@ -144,7 +144,7 @@ export async function attachDebuggerFocused(tabId, action) {
 export const respondWithInputWarning = async (tabId, obj, selector, xpath) => {
   const res = await respondWith(tabId, obj, selector, xpath);
   if (res.pageVisibility && res.pageVisibility.visible === false) {
-    res.warning = 'This tab is hidden (not the active tab). Input events may not be delivered to a hidden tab - if this command had no effect, bring the tab to the front with `show` and retry.';
+    res.warning = 'This tab is hidden (not the active tab). Input events may not be delivered to a hidden tab - if this command had no effect, the user can bring the tab forward themselves, or the `show` tool can, which takes over their screen.';
   }
   return res;
 };

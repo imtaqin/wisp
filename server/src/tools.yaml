@@ -459,16 +459,16 @@ tools:
 
   clipboard_read:
     description: >-
-      Read the system clipboard as text. Needs the tab focused and in front -
-      call show first.
+      Read the system clipboard as text. Only works while the tab is the one
+      the user is looking at; it fails rather than stealing focus.
     required: [tabId]
     properties:
       tabId: *tabId
 
   clipboard_write:
     description: >-
-      Write text to the system clipboard. Needs the tab focused and in front -
-      call show first.
+      Write text to the system clipboard. Only works while the tab is the one
+      the user is looking at; it fails rather than stealing focus.
     required: [tabId, text]
     properties:
       tabId: *tabId

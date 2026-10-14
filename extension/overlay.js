@@ -18,7 +18,6 @@ const wispOverlay = (() => {
   let idleTimer = null;
   let moodTimer = null;
   let blinkTimer = null;
-  let wanderTimer = null;
   let logEnabled = true;
   let ghost = null; // where the wisp is now, in viewport coords
 
@@ -60,7 +59,6 @@ const wispOverlay = (() => {
     }
     .mascot-wrap.flip { flex-direction: row-reverse; }
     .mascot-wrap.flip .bubble { border-radius: 13px 13px 13px 3px; transform-origin: bottom left; }
-    .layer.idle .mascot-wrap { opacity: .8; }
     .mascot-wrap[hidden] { display: none; }
 
     .bubble {
@@ -135,7 +133,6 @@ const wispOverlay = (() => {
       filter: drop-shadow(0 0 4px rgba(245, 158, 11, .9)) drop-shadow(0 0 10px var(--amber-soft));
     }
     .cursor[hidden] { display: none }
-    .layer.idle .cursor { opacity: .55 }
 
     .ripple {
       position: absolute; top: 0; left: 0; width: 36px; height: 36px;
@@ -355,23 +352,6 @@ const wispOverlay = (() => {
     ghost = { x: left, y: top };
   }
 
-  // Idle: drift around the page instead of parking in one corner
-  function wander() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const x = MARGIN + Math.random() * Math.max(1, vw - GHOST_W - MARGIN * 2);
-    const y = MARGIN + Math.random() * Math.max(1, vh - GHOST_H - MARGIN * 2);
-    flyTo(x, y, { near: false });
-  }
-
-  function startWander() {
-    clearInterval(wanderTimer);
-    wanderTimer = setInterval(() => {
-      const layer = host && $('.layer');
-      if (layer && layer.classList.contains('idle')) wander();
-    }, 4200);
-  }
-
   const pad = (n) => String(n).padStart(2, '0');
 
   function logLine(what, detail, ok = true) {
@@ -406,19 +386,30 @@ const wispOverlay = (() => {
     rows.slice(6).forEach((el) => el.remove());
   }
 
+  // A command is running: show the overlay. It hides itself again once the
+  // client has been quiet for IDLE_MS - an idle tab looks untouched.
   function markBusy() {
+    if (!active) return;
     const layer = $('.layer');
-    layer.classList.add('busy');
-    layer.classList.remove('idle');
+    layer.classList.add('active', 'busy');
     if (!/mood-(happy|oops)/.test(layer.className)) setMood('busy');
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      layer.classList.remove('busy');
-      layer.classList.add('idle');
-      setMood('idle');
-      say('watching this tab');
-      wander();
-    }, IDLE_MS);
+    idleTimer = setTimeout(hideIdle, IDLE_MS);
+  }
+
+  function hideIdle() {
+    if (!host) return;
+    const layer = $('.layer');
+    layer.classList.remove('active', 'busy');
+    setMood('idle');
+    $('.cursor').hidden = true;
+    $('.bubble').classList.remove('show');
+    // Drop the log so the next burst of work starts from a clean list
+    setTimeout(() => {
+      if (!host || $('.layer').classList.contains('active')) return;
+      $('.log').textContent = '';
+      $('.log').classList.remove('show');
+    }, 350);
   }
 
   function say(text, emphasis = 'Wisp') {
@@ -439,17 +430,15 @@ const wispOverlay = (() => {
       active = on;
       if (!on && !host) return;
       const layer = $('.layer');
-      layer.classList.toggle('active', on);
       if (on) {
-        layer.classList.add('idle');
-        say('is driving this tab');
-        if (!ghost) flyTo(window.innerWidth - 120, window.innerHeight - 120, { near: false });
-        startWander();
-        logLine('connected', location.host);
+        // Connecting draws nothing: a connected tab the user is reading should
+        // look untouched. markBusy() turns the overlay on when work starts.
+        if (!ghost) flyTo(window.innerWidth - 140, window.innerHeight - 140, { near: false });
       } else {
+        layer.classList.remove('active');
         clearTimeout(idleTimer);
         clearTimeout(moodTimer);
-        clearInterval(wanderTimer);
+        layer.classList.remove('busy');
         $('.cursor').hidden = true;
         $('.bubble').classList.remove('show');
         $('.log').classList.remove('show');
@@ -491,7 +480,6 @@ const wispOverlay = (() => {
       const cursor = $('.cursor');
       if (show) {
         cursor.hidden = false;
-        $('.layer').classList.add('active');
         markBusy();
       } else if (!active) {
         // Not under remote control: the cursor only lives for the command
@@ -527,7 +515,7 @@ const wispOverlay = (() => {
     // Draw boxes over elements so a human can see what the client picked
     highlight(boxes, label, durationMs = 2500) {
       const layer = $('.layer');
-      layer.classList.add('active');
+      markBusy();
       const drawn = boxes.map((box) => {
         const el = document.createElement('div');
         el.className = 'hl';
